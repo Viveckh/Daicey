@@ -10,7 +10,7 @@ public:
 	// Default Constructor
 	Square() {
 		row = 0;
-		row = 0;
+		column = 0;
 		occupied = false;
 	}
 
@@ -31,8 +31,10 @@ public:
 		occupied = value;
 	}
 
-	void SetRow(int value) { row = value; }
-	void SetColumn(int value) { column = value; }
+	void SetCoordinates(int row, int column) {
+		this->row = row;
+		this->column = column;
+	}
 
 	int GetRow() { return row; }
 	int GetColumn() { return column; }
