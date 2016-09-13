@@ -3,32 +3,46 @@
 //
 
 #pragma once
+#include "Dice.h"
 
 class Square {
 
 public:
 	// Default Constructor
 	Square() {
-		row = 0;
-		column = 0;
-		occupied = false;
+		row = NULL;
+		column = NULL;
+		resident = NULL;
 	}
 
 	// Constructor
-	Square(int row, int column, bool occupied) {
+	Square(int row, int column) {
 		this->row = row;
 		this->column = column;
-		this->occupied = occupied;
 	}
 
 	// Checks whether the square is occupied by a gameobject
 	bool IsOccupied() {
-		return occupied;
+		if (resident != NULL) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	// Sets the occupancy status of the square
-	void SetOccupied(bool value) {
-		occupied = value;
+	void SetOccupied(Dice &dice) {
+		resident = &dice;
+	}
+
+	Dice * GetResident() {
+		return resident;
+	}
+
+	// Clears the occupancy
+	void SetVacant() {
+		resident = NULL;
 	}
 
 	void SetCoordinates(int row, int column) {
@@ -44,6 +58,6 @@ private:
 	int row;
 	int column;
 
-	// Occupancy status
-	bool occupied;
+	// Occupancy status, not occupied if the pointer is null
+	Dice* resident;
 };

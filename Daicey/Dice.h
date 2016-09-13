@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "stdafx.h"
 
 class Dice {
 
@@ -19,6 +20,7 @@ public:
 		right = SUM_OF_OPPOSITE_SIDES - left;
 		front = SUM_OF_OPPOSITE_SIDES - rear;
 		king = false;
+		botOperated = false;
 	}
 
 	// Constructor
@@ -109,6 +111,14 @@ public:
 		}
 	}
 
+	void SetBotControl(bool value) {
+		botOperated = value;
+	}
+
+	bool IsBotOperated() {
+		return botOperated;
+	}
+
 	bool IsKing() {
 		return king;
 	}
@@ -132,6 +142,7 @@ private:
 	int row;
 	int column;
 	bool king;
+	bool botOperated;
 
 	//Variables to store the values of different faces
 	int top;
