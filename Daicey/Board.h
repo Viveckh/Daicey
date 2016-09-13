@@ -23,7 +23,7 @@ public:
 				humans[index].SetBeginningOrientation(startingTopValuesOfDices[index]);
 				bots[index].SetBeginningOrientation(startingTopValuesOfDices[index]);
 			}
-			//cout << humans[index].getTop() << humans[index].getLeft() << humans[index].getBottom() << humans[index].getRight() << endl;
+			//cout << humans[index].GetTop() << humans[index].GetLeft() << humans[index].GetBottom() << humans[index].GetRight() << endl;
 		}
 
 		// General board setup with Squares and Dices
@@ -67,7 +67,7 @@ public:
 					else {
 						cout << "H";
 					}
-					cout << gameBoard[row][col].GetResident()->getTop() << gameBoard[row][col].GetResident()->getRight() << "\t";
+					cout << gameBoard[row][col].GetResident()->GetTop() << gameBoard[row][col].GetResident()->GetRight() << "\t";
 				}
 				else {
 					cout << "-\t";
@@ -92,15 +92,14 @@ public:
 						serializedGameBoard[row][col].assign("H");
 					}
 					// Append the top and right value of the occupying dice
-					serializedGameBoard[row][col].append(to_string(gameBoard[row][col].GetResident()->getTop()));
-					serializedGameBoard[row][col].append(to_string(gameBoard[row][col].GetResident()->getRight()));
+					serializedGameBoard[row][col].append(to_string(gameBoard[row][col].GetResident()->GetTop()));
+					serializedGameBoard[row][col].append(to_string(gameBoard[row][col].GetResident()->GetRight()));
 				}
 				//cout << serializedGameBoard[row][col] << "\t";
 			}
 			//cout << endl;
 		}
 	}
-
 
 	//ATTENTION: These should be private/protected but accessible from elsewhere at the same time
 	Square gameBoard[8][9];

@@ -64,16 +64,16 @@ public:
 	}
 
 	// Getters for the coordinates
-	int getRow() { return row; }
-	int getColumn() { return column; }
+	int GetRow() { return row; }
+	int GetColumn() { return column; }
 	
 	// Getters for the values of different faces of the dice
-	int getTop() { return top; }
-	int getBottom() { return bottom; }
-	int getFront() { return front; }
-	int getRear() { return rear; }
-	int getLeft() { return left; }
-	int getRight() { return right; }
+	int GetTop() { return top; }
+	int GetBottom() { return bottom; }
+	int GetFront() { return front; }
+	int GetRear() { return rear; }
+	int GetLeft() { return left; }
+	int GetRight() { return right; }
 
 	// Setters for the coordinates
 	void SetCoordinates(int row, int column) {

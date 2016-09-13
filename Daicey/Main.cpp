@@ -16,7 +16,25 @@ int main(int argc, char *argv[]) {
 	humanMoves.RollForward(board.humans[0], board);
 	humanMoves.RollForward(board.humans[0], board);
 	humanMoves.RollForward(board.humans[0], board);
-	cout << endl;
 	board.DrawBoard();
+
+	Moves computerMoves;
+	computerMoves.RollBackward(board.bots[4], board);
+	board.DrawBoard();
+	cout << endl;
+
+	if (humanMoves.IsValidDestination(board.humans[0], board.gameBoard[4][1])) {
+		cout << "1valid";
+	}
+	
+	if (humanMoves.IsValidDestination(board.humans[0], board.gameBoard[7][1])) {
+		cout << "2valid";
+	}
+	if (humanMoves.IsValidDestination(board.humans[0], board.gameBoard[5][1])) {
+		cout << "3valid";
+	}
+	if (humanMoves.IsValidDestination(board.humans[0], board.gameBoard[6][2])) {
+		cout << "4valid";
+	}
 	system("pause");
 }
