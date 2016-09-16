@@ -21,6 +21,7 @@ public:
 		this->column = column;
 	}
 
+
 	// Checks whether the square is occupied by a gameobject
 	bool IsOccupied() {
 		if (resident != NULL) {

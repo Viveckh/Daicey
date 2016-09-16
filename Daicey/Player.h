@@ -11,6 +11,7 @@ public:
 	Player() {
 		wins = 0;
 		score = 0;
+		pathChoice = 0;
 		tempStorage1 = 0;
 		tempStorage2 = 0;
 	}
@@ -21,7 +22,11 @@ public:
 	}
 
 
-	// FUNCTIONS FOR PLAYER STRATEGIES
+	/*
+
+	// NEW SECTION: THESE FUNCTIONS CAN BE USED TO CHANGE STATES EITHER IN A TEMPORARY OR A PERMANENT GAME BOARD
+
+	*/
 	
 	// ALSO, don't forget to update the newly occupied coordinate and release the currently occupied square.
 	void RollUp(Dice &dice, Board &board) {
@@ -96,6 +101,12 @@ public:
 		}
 	}
 
+	/*
+
+	// NEW SECTION: THE FOLLOWING FUNCTIONS WILL FORM TEMPORARY PASSED-BY-VALUE GAME OBJECTS AND CHECK THE VALIDITY OF ROUTE/DESTINATION
+
+	*/
+
 	bool IsValidDestination(Dice dice, Square destination) {
 		
 		// Destination square should be empty
@@ -111,6 +122,7 @@ public:
 
 	// The temporary dice goes and sits jumps from one square to the other and checks if it is already occupied
 	bool IsPathValid(Dice dice, Square destination, Board board) {
+		pathChoice = 0;
 
 		// CASE 1
 		// If both the rows & columns differ in the destination, it means this is a frontal-lateral combined move attempt
@@ -121,11 +133,13 @@ public:
 			//Only one path needs to pass
 			// Path 1 - First row traversal, then Column
 			if (TraversedRowsWithoutBlockade(dice, destination, board) && TraversedColumnsWithoutBlockade(dice, destination, board)) {
+				pathChoice = 1;
 				return true;
 			}
 
 			// Path 2 - First column traversal, then row
 			if (TraversedColumnsWithoutBlockade(dice, destination, board) && TraversedRowsWithoutBlockade(dice, destination, board)) {
+				pathChoice = 2;
 				return true;
 			}
 
@@ -138,6 +152,7 @@ public:
 		// ONE possible path
 		if (dice.GetRow() != destination.GetRow()) {
 			if (TraversedRowsWithoutBlockade(dice, destination, board)) {
+				pathChoice = 3;
 				return true;
 			}
 			else {
@@ -150,6 +165,7 @@ public:
 		// ONE possible path
 		if (dice.GetColumn() != destination.GetColumn()) {
 			if (TraversedColumnsWithoutBlockade(dice, destination, board)) {
+				pathChoice = 4;
 				return true;
 			}
 			else {
@@ -204,16 +220,73 @@ public:
 		return true;
 	}
 
-	void MakeAMove(int startRow, int startCol, int endRow, int endCol) {
+
+	/*
+
+	// NEW SECTION: THE FOLLOWING FUNCTIONS WILL ACTUALLY MODIFY THE REAL GAMEBOARD.
+	
+	*/
+
+	void MakeAMove(int startRow, int startCol, int endRow, int endCol, Board &board) {
 		//Check if destination is valid, then if path is valid
 		//Then, either make the move or log an error
 		// This can be used for both human or computer after verifying that they are moving their own players.
+		if (IsValidDestination(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol))) {
+			if (IsPathValid(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board)) {
+				switch (pathChoice)
+				{
+				// First vertically, a 90 degree turn, then laterally
+				case 1:
+					KeepRollingVertically(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
+					KeepRollingLaterally(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
+				// First laterally, a 90 degree turn, then laterally
+				case 2:
+					KeepRollingLaterally(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
+					KeepRollingVertically(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
+				// Vertically only
+				case 3:
+					KeepRollingVertically(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
+				// Laterally only
+				case 4:
+					KeepRollingLaterally(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
+				default:
+					//ATTENTION: LOG ERROR SAYING THE PATH DESTINATION COULDN'T BE SET FOR SOME REASON
+					break;
+				}
+			}
+		}
 	}
+
+	//These two following functions will modify the actual gameboard. So pass the real game objects
+	void KeepRollingVertically(Dice &dice, Square &destination, Board &board){
+		do {
+			if (dice.GetRow() < destination.GetRow()) {
+				RollUp(dice, board);
+			}
+			else {
+				RollDown(dice, board);
+			}
+		} while (dice.GetRow() == destination.GetRow());
+	}
+
+	void KeepRollingLaterally(Dice &dice, Square &destination, Board &board) {
+		do {
+			if (dice.GetColumn() < destination.GetColumn()) {
+				RollRight(dice, board);
+			}
+			else {
+				RollLeft(dice, board);
+			}
+		} while (dice.GetColumn() == destination.GetColumn());
+	}
+
+protected:
 
 private:
 	// Variables for Player Stats
 	int score;
 	int wins;		// Stats for the tournament
+	int pathChoice;	// Choice of what type of path to take out of available four types
 
 	// Variables for Player Strategies
 	int tempStorage1;

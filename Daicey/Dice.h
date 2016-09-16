@@ -30,6 +30,8 @@ public:
 		this->king = king;
 	}
 
+
+
 	void SetBeginningOrientation(int top) {
 		//Values given in program specs
 		this->top = top;
