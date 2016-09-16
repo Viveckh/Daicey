@@ -12,7 +12,7 @@ public:
 	// ALSO, don't forget to update the newly occupied coordinate and release the currently occupied square.
 	void RollForward(Dice &dice, Board &board) {
 
-		if (dice.GetRow() < 7 && !board.gameBoard[dice.GetRow()+1][dice.GetColumn()].IsOccupied()) {
+		if (dice.GetRow() < 7 && !board.IsSquareOccupied(dice.GetRow() + 1, dice.GetColumn())) {
 			tempStorage1 = dice.GetFront();
 			tempStorage2 = dice.GetRear();
 
@@ -22,9 +22,9 @@ public:
 			dice.SetTop(tempStorage2);
 
 			//Set the currently occupied square to empty, and place the dice in the new square
-			board.gameBoard[dice.GetRow()][dice.GetColumn()].SetVacant();
+			board.SetSquareVacant(dice.GetRow(), dice.GetColumn());
 			dice.SetRow(1, true);
-			board.gameBoard[dice.GetRow()][dice.GetColumn()].SetOccupied(dice);
+			board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
 		}
 		else {
 			cout << "INVALID MOVE" << endl;
@@ -32,7 +32,7 @@ public:
 	}
 
 	void RollBackward(Dice &dice, Board &board) {
-		if (dice.GetRow() > 0 && !board.gameBoard[dice.GetRow() - 1][dice.GetColumn()].IsOccupied()) {
+		if (dice.GetRow() > 0 && !board.IsSquareOccupied(dice.GetRow() - 1, dice.GetColumn())) {
 			tempStorage1 = dice.GetFront();
 			tempStorage2 = dice.GetRear();
 
@@ -42,14 +42,14 @@ public:
 			dice.SetBottom(tempStorage2);
 
 			//Set the currently occupied square to empty, and place the dice in the new square
-			board.gameBoard[dice.GetRow()][dice.GetColumn()].SetVacant();
+			board.SetSquareVacant(dice.GetRow(), dice.GetColumn());
 			dice.SetRow(1, false);
-			board.gameBoard[dice.GetRow()][dice.GetColumn()].SetOccupied(dice);
+			board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
 		}
 	}
 
 	void RollLeft(Dice &dice, Board &board) {
-		if (dice.GetColumn() > 0 && !board.gameBoard[dice.GetRow()][dice.GetColumn() - 1].IsOccupied()) {
+		if (dice.GetColumn() > 0 && !board.IsSquareOccupied(dice.GetRow(), dice.GetColumn() - 1)) {
 			tempStorage1 = dice.GetLeft();
 			tempStorage2 = dice.GetRight();
 
@@ -59,14 +59,14 @@ public:
 			dice.SetTop(tempStorage2);
 
 			//Set the currently occupied square to empty, and place the dice in the new square
-			board.gameBoard[dice.GetRow()][dice.GetColumn()].SetVacant();
+			board.SetSquareVacant(dice.GetRow(), dice.GetColumn());
 			dice.SetColumn(1, false);
-			board.gameBoard[dice.GetRow()][dice.GetColumn()].SetOccupied(dice);
+			board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
 		}
 	}
 
 	void RollRight(Dice &dice, Board &board) {
-		if (dice.GetColumn() < 8 && !board.gameBoard[dice.GetRow()][dice.GetColumn() + 1].IsOccupied()) {
+		if (dice.GetColumn() < 8 && !board.IsSquareOccupied(dice.GetRow(), dice.GetColumn() + 1)) {
 			tempStorage1 = dice.GetLeft();
 			tempStorage2 = dice.GetRight();
 
@@ -76,9 +76,9 @@ public:
 			dice.SetBottom(tempStorage2);
 
 			//Set the currently occupied square to empty, and place the dice in the new square
-			board.gameBoard[dice.GetRow()][dice.GetColumn()].SetVacant();
+			board.SetSquareVacant(dice.GetRow(), dice.GetColumn());
 			dice.SetColumn(1, true);
-			board.gameBoard[dice.GetRow()][dice.GetColumn()].SetVacant();
+			board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
 		}
 	}
 
@@ -160,7 +160,7 @@ public:
 
 			// Check if there is a blockade on the path as you go.
 			// If yes, the path is invalid
-			if (board.gameBoard[dice.GetRow()][dice.GetColumn()].IsOccupied()) {
+			if (board.IsSquareOccupied(dice.GetRow(), dice.GetColumn())) {
 				return false;
 			}
 		} while (dice.GetRow() == destination.GetRow());
@@ -182,7 +182,7 @@ public:
 
 			// Check if there is a blockade on the path as you go.
 			// If yes, the path is invalid
-			if (board.gameBoard[dice.GetRow()][dice.GetColumn()].IsOccupied()) {
+			if (board.IsSquareOccupied(dice.GetRow(), dice.GetColumn())) {
 				return false;
 			}
 		} while (dice.GetColumn() != destination.GetColumn());

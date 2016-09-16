@@ -23,17 +23,17 @@ int main(int argc, char *argv[]) {
 	board.DrawBoard();
 	cout << endl;
 
-	if (humanMoves.IsValidDestination(board.humans[0], board.gameBoard[4][1])) {
+	if (humanMoves.IsValidDestination(board.humans[0], board.GetSquareAtLocation(4, 1))) {
 		cout << "1valid";
 	}
 	
-	if (humanMoves.IsValidDestination(board.humans[0], board.gameBoard[7][1])) {
+	if (humanMoves.IsValidDestination(board.humans[0], board.GetSquareAtLocation(7, 1))) {
 		cout << "2valid";
 	}
-	if (humanMoves.IsValidDestination(board.humans[0], board.gameBoard[5][1])) {
+	if (humanMoves.IsValidDestination(board.humans[0], board.GetSquareAtLocation(5, 1))) {
 		cout << "3valid";
 	}
-	if (humanMoves.IsValidDestination(board.humans[0], board.gameBoard[6][2])) {
+	if (humanMoves.IsValidDestination(board.humans[0], board.GetSquareAtLocation(6, 2))) {
 		cout << "4valid";
 	}
 	system("pause");

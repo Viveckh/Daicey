@@ -101,12 +101,31 @@ public:
 		}
 	}
 
+	bool IsSquareOccupied(int row, int col) {
+		return gameBoard[row][col].IsOccupied();
+	}
+
+	void SetSquareOccupied(int row, int col, Dice &dice) {
+		return gameBoard[row][col].SetOccupied(dice);
+	}
+
+	void SetSquareVacant(int row, int col) {
+		return gameBoard[row][col].SetVacant();
+	}
+
+	Dice * GetSquareResident(int row, int col) {
+		return gameBoard[row][col].GetResident();
+	}
+
+	Square GetSquareAtLocation(int row, int col) {
+		return gameBoard[row][col];
+	}
+
 	//ATTENTION: These should be private/protected but accessible from elsewhere at the same time
-	Square gameBoard[8][9];
 	Dice humans[9];
 	Dice bots[9];
 private:
-	friend class Moves;
+	Square gameBoard[8][9];
 	int startingTopValuesOfDices[9] = { 5, 1, 2, 6, 1, 6, 2, 1, 5 };
 	string serializedGameBoard[8][9];
 };
