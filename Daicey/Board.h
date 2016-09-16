@@ -51,56 +51,6 @@ public:
 		}
 	}
 
-	void DrawBoard() {
-		//Drawing the board inverted cause zero row is supposed to be at the bottom
-		for (int row = 7; row >= 0; row--) {
-			cout << abs(row + 1) << "\t";
-			for (int col = 0; col < 9; col++) {
-				if (gameBoard[row][col].IsOccupied()) {
-					//ATTENTION: Need to work on this after establishing a link between a square and a dice.
-					//Try creating a dice within the square class and see if that link assists it in some way.
-					//Also add isHuman/isComputer functions to find out if a dice is operated by a human or a comp
-					
-					if (gameBoard[row][col].GetResident()->IsBotOperated()) {
-						cout << "C";
-					}
-					else {
-						cout << "H";
-					}
-					cout << gameBoard[row][col].GetResident()->GetTop() << gameBoard[row][col].GetResident()->GetRight() << "\t";
-				}
-				else {
-					cout << "-\t";
-				}
-			}
-			cout << endl;
-		}
-		cout << "\t1\t2\t3\t4\t5\t6\t7\t8\t9" << endl << endl;
-	}
-
-
-	// Stores the game state in a multidimensional string array.
-	void UpdateBoard() {
-		for (int row = 7; row >= 0; row--) {
-			for (int col = 0; col < 9; col++) {
-				serializedGameBoard[row][col].assign("0");
-				if (gameBoard[row][col].IsOccupied()) {
-					if (gameBoard[row][col].GetResident()->IsBotOperated()) {
-						serializedGameBoard[row][col].assign("C");
-					}
-					else {
-						serializedGameBoard[row][col].assign("H");
-					}
-					// Append the top and right value of the occupying dice
-					serializedGameBoard[row][col].append(to_string(gameBoard[row][col].GetResident()->GetTop()));
-					serializedGameBoard[row][col].append(to_string(gameBoard[row][col].GetResident()->GetRight()));
-				}
-				//cout << serializedGameBoard[row][col] << "\t";
-			}
-			//cout << endl;
-		}
-	}
-
 	bool IsSquareOccupied(int row, int col) {
 		return gameBoard[row][col].IsOccupied();
 	}
@@ -127,5 +77,4 @@ public:
 private:
 	Square gameBoard[8][9];
 	int startingTopValuesOfDices[9] = { 5, 1, 2, 6, 1, 6, 2, 1, 5 };
-	string serializedGameBoard[8][9];
 };

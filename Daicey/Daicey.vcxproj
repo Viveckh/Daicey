@@ -112,8 +112,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
+    <ClInclude Include="BoardView.h" />
     <ClInclude Include="Dice.h" />
-    <ClInclude Include="Moves.h" />
+    <ClInclude Include="ErrorDisplay.h" />
+    <ClInclude Include="Human.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Square.h" />
     <ClInclude Include="stdafx.h" />

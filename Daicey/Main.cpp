@@ -1,26 +1,28 @@
 #include "stdafx.h"
 #include "Board.h"
-#include "Moves.h"
+#include "BoardView.h"
+#include "Player.h"
 
 int main(int argc, char *argv[]) {
 	Board board;
-	board.DrawBoard();
-	board.UpdateBoard();
-	Moves humanMoves;
-	humanMoves.RollForward(board.humans[0], board);
-	humanMoves.RollForward(board.humans[0], board);
-	humanMoves.RollForward(board.humans[0], board);
-	humanMoves.RollForward(board.humans[0], board);
-	humanMoves.RollForward(board.humans[0], board);
-	humanMoves.RollForward(board.humans[0], board);
-	humanMoves.RollForward(board.humans[0], board);
-	humanMoves.RollForward(board.humans[0], board);
-	humanMoves.RollForward(board.humans[0], board);
-	board.DrawBoard();
+	BoardView boardView;
+	boardView.DrawBoard(board);
+	boardView.UpdateBoard(board);
+	Player humanMoves;
+	humanMoves.RollUp(board.humans[0], board);
+	humanMoves.RollUp(board.humans[0], board);
+	humanMoves.RollUp(board.humans[0], board);
+	humanMoves.RollUp(board.humans[0], board);
+	humanMoves.RollUp(board.humans[0], board);
+	humanMoves.RollUp(board.humans[0], board);
+	humanMoves.RollUp(board.humans[0], board);
+	humanMoves.RollUp(board.humans[0], board);
+	humanMoves.RollUp(board.humans[0], board);
+	boardView.DrawBoard(board);
 
-	Moves computerMoves;
-	computerMoves.RollBackward(board.bots[4], board);
-	board.DrawBoard();
+	Player computerMoves;
+	computerMoves.RollDown(board.bots[4], board);
+	boardView.DrawBoard(board);
 	cout << endl;
 
 	if (humanMoves.IsValidDestination(board.humans[0], board.GetSquareAtLocation(4, 1))) {
