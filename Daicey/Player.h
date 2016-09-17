@@ -31,7 +31,7 @@ public:
 	// ALSO, don't forget to update the newly occupied coordinate and release the currently occupied square.
 	void RollUp(Dice &dice, Board &board) {
 
-		if (dice.GetRow() < 7 && !board.IsSquareOccupied(dice.GetRow() + 1, dice.GetColumn())) {
+		if (dice.GetRow() < 7) {
 			tempStorage1 = dice.GetFront();
 			tempStorage2 = dice.GetRear();
 
@@ -51,7 +51,7 @@ public:
 	}
 
 	void RollDown(Dice &dice, Board &board) {
-		if (dice.GetRow() > 0 && !board.IsSquareOccupied(dice.GetRow() - 1, dice.GetColumn())) {
+		if (dice.GetRow() > 0) {
 			tempStorage1 = dice.GetFront();
 			tempStorage2 = dice.GetRear();
 
@@ -68,7 +68,7 @@ public:
 	}
 
 	void RollLeft(Dice &dice, Board &board) {
-		if (dice.GetColumn() > 0 && !board.IsSquareOccupied(dice.GetRow(), dice.GetColumn() - 1)) {
+		if (dice.GetColumn() > 0) {
 			tempStorage1 = dice.GetLeft();
 			tempStorage2 = dice.GetRight();
 
@@ -85,7 +85,7 @@ public:
 	}
 
 	void RollRight(Dice &dice, Board &board) {
-		if (dice.GetColumn() < 8 && !board.IsSquareOccupied(dice.GetRow(), dice.GetColumn() + 1)) {
+		if (dice.GetColumn() < 8) {
 			tempStorage1 = dice.GetLeft();
 			tempStorage2 = dice.GetRight();
 
@@ -109,13 +109,12 @@ public:
 
 	bool IsValidDestination(Dice dice, Square destination) {
 		
-		// Destination square should be empty
-		if (destination.GetResident() == NULL) {
+		// Destination square does not need to be empty, so I commented the below condition
+		// if (destination.GetResident() == NULL) {} If square 
 
-			// (Destination row - source row) + (Destination col - source col) gives the distance between the source and destination squares
-			if (dice.GetTop() == abs(destination.GetRow() - dice.GetRow()) + abs(destination.GetColumn() - dice.GetColumn())) {
-				return true;
-			}
+		// (Destination row - source row) + (Destination col - source col) gives the distance between the source and destination squares
+		if (dice.GetTop() == abs(destination.GetRow() - dice.GetRow()) + abs(destination.GetColumn() - dice.GetColumn())) {
+			return true;
 		}
 		return false;
 	}
@@ -144,6 +143,7 @@ public:
 			}
 
 			//If both the path couldn't return true, then the path is invalid
+			cout << "Invalid path in route 1 and 2" << endl;
 			return false;
 		}
 
@@ -156,6 +156,7 @@ public:
 				return true;
 			}
 			else {
+				cout << "Invalid path in route 3" << endl;
 				return false;
 			}
 		}
@@ -169,6 +170,7 @@ public:
 				return true;
 			}
 			else {
+				cout << "Invalid path in route 4" << endl;
 				return false;
 			}
 		}
@@ -187,6 +189,11 @@ public:
 			}
 			else {
 				dice.SetRow(1, false);
+			}
+			
+			// No need to check on the destination. If it reaches there, the traversal is considered successful
+			if ((dice.GetRow() == destination.GetRow()) && (dice.GetColumn() == destination.GetColumn())) {
+				return true;
 			}
 
 			// Check if there is a blockade on the path as you go.
@@ -211,6 +218,11 @@ public:
 				dice.SetColumn(1, false);
 			}
 
+			// No need to check on the destination. If it reaches there, the traversal is considered successful
+			if ((dice.GetRow() == destination.GetRow()) && (dice.GetColumn() == destination.GetColumn())) {
+				return true;
+			}
+
 			// Check if there is a blockade on the path as you go.
 			// If yes, the path is invalid
 			if (board.IsSquareOccupied(dice.GetRow(), dice.GetColumn())) {
@@ -233,22 +245,27 @@ public:
 		// This can be used for both human or computer after verifying that they are moving their own players.
 		if (IsValidDestination(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol))) {
 			if (IsPathValid(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board)) {
+				cout << "Took path " << pathChoice << endl;
 				switch (pathChoice)
 				{
 				// First vertically, a 90 degree turn, then laterally
 				case 1:
 					KeepRollingVertically(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
 					KeepRollingLaterally(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
+					break;
 				// First laterally, a 90 degree turn, then laterally
 				case 2:
 					KeepRollingLaterally(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
 					KeepRollingVertically(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
+					break;
 				// Vertically only
 				case 3:
 					KeepRollingVertically(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
+					break;
 				// Laterally only
 				case 4:
 					KeepRollingLaterally(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
+					break;
 				default:
 					//ATTENTION: LOG ERROR SAYING THE PATH DESTINATION COULDN'T BE SET FOR SOME REASON
 					break;
@@ -258,6 +275,7 @@ public:
 	}
 
 	//These two following functions will modify the actual gameboard. So pass the real game objects
+	// Make sure you check the validity of the path beforehand. Cause they won't do the checking
 	void KeepRollingVertically(Dice &dice, Square &destination, Board &board){
 		do {
 			if (dice.GetRow() < destination.GetRow()) {
@@ -266,7 +284,7 @@ public:
 			else {
 				RollDown(dice, board);
 			}
-		} while (dice.GetRow() == destination.GetRow());
+		} while (dice.GetRow() != destination.GetRow());
 	}
 
 	void KeepRollingLaterally(Dice &dice, Square &destination, Board &board) {
@@ -277,7 +295,7 @@ public:
 			else {
 				RollLeft(dice, board);
 			}
-		} while (dice.GetColumn() == destination.GetColumn());
+		} while (dice.GetColumn() != destination.GetColumn());
 	}
 
 protected:
