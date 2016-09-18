@@ -23,6 +23,7 @@ public:
 		wins++;
 	}
 
+protected:
 
 	/*
 
@@ -349,8 +350,6 @@ public:
 			}
 		} while (dice.GetColumn() != destination.GetColumn());
 	}
-
-protected:
 
 private:
 	// Variables for Player Stats

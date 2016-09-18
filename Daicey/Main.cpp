@@ -3,8 +3,14 @@
 #include "BoardView.h"
 #include "Player.h"
 #include "Human.h"
+#include "Game.h"
 
 int main(int argc, char *argv[]) {
+	Game game;
+	game.ImplementGame();
+
+
+	/*
 	Board board;
 	BoardView boardView;
 	boardView.DrawBoard(board);
@@ -30,6 +36,8 @@ int main(int argc, char *argv[]) {
 	hx.Play(3, 7, 3, 6, board);	//capturing a piece
 	boardView.DrawBoard(board);
 	boardView.ViewCapturedDice(board);
+	*/
+
 
 	/*
 	Player humanMoves;
