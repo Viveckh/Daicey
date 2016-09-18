@@ -19,12 +19,17 @@ int main(int argc, char *argv[]) {
 	boardView.DrawBoard(board);
 	hx.Play(5, 0, 5, 3, board);	// lateral move
 	boardView.DrawBoard(board);
-	//hx.Play(0, 3, 6, 3, board);	// trying to hope past a taken spot
-	//boardView.DrawBoard(board);
+	hx.Play(0, 3, 6, 3, board);	// trying to hope past a taken spot
+	boardView.DrawBoard(board);
 	hx.Play(0, 3, 5, 2, board);	// trying to hope past a taken spot and do a 90 degree turn
 	boardView.DrawBoard(board);
 	hx.Play(0, 3, 3, 6, board);	//trying to do a 90 degree
 	boardView.DrawBoard(board);
+	hx.Play(5, 3, 3, 7, board);	//trying to do a 90 degree but only one path (2nd one) is valid
+	boardView.DrawBoard(board);
+	hx.Play(3, 7, 3, 6, board);	//capturing a piece
+	boardView.DrawBoard(board);
+	boardView.ViewCapturedDice(board);
 
 	/*
 	Player humanMoves;

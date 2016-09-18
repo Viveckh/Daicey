@@ -21,6 +21,7 @@ public:
 		front = SUM_OF_OPPOSITE_SIDES - rear;
 		king = false;
 		botOperated = false;
+		captured = false;
 	}
 
 	// Constructor
@@ -125,6 +126,14 @@ public:
 		return king;
 	}
 
+	void SetCaptured(bool value) {
+		captured = value;
+	}
+
+	bool IsCaptured() {
+		return captured;
+	}
+
 	// Setters for the values of different faces of the dime
 	// ATTENTION: Setting one face automatically sets the opposite since the sum is 7
 	void SetTop(int value) { top = value; }
@@ -145,6 +154,7 @@ private:
 	int column;
 	bool king;
 	bool botOperated;
+	bool captured;
 
 	//Variables to store the values of different faces
 	int top;
