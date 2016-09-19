@@ -4,13 +4,12 @@
 class Human: public Player {
 public:
 	// ATTENTION: Validate the input
-	void Play(int startRow, int startCol, int endRow, int endCol, Board &board) {
+	bool Play(int startRow, int startCol, int endRow, int endCol, Board &board) {
 		
-
 		if (IndexOutOfBounds(startRow, startCol, endRow, endCol)) {
 			// Log error here
 			cout << "Input co-ordinates out of bound. Try again!" << endl;
-			return;
+			return false;
 		}
 		// Decrementing the input values to match the gameboard internal representation in array
 		startRow--;
@@ -22,13 +21,16 @@ public:
 		if (board.GetSquareResident(startRow, startCol) != NULL) {
 			if (!board.GetSquareResident(startRow, startCol)->IsBotOperated()) {
 				MakeAMove(startRow, startCol, endRow, endCol, board);
+				return true;
 			}
 			else {
 				cout << "Not your player" << endl;
+				return false;
 			}
 		}
 		else {
 			cout << "No dices in the square" << endl;
+			return false;
 		}
 	}
 
