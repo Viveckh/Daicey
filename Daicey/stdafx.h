@@ -9,6 +9,7 @@
 #include "targetver.h"
 
 #define WIN32_LEAN_AND_MEAN		// Excludes rarely-used stuff from Windows headers
+#define NOMINMAX
 #include <stdio.h>
 #include <tchar.h>
 
@@ -27,5 +28,6 @@
 #include <vector>
 #include <algorithm>
 #include <time.h>
+#include <limits>
 
 using namespace std;

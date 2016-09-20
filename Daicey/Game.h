@@ -38,7 +38,11 @@ public:
 					//Transfer Control
 					botTurn = false;
 					humanTurn = true;
-
+					goto ReloadGameBoard;	//Using Goto to prevent human's loop from running
+				}
+				else {
+					cout << "Bot made an invalid move.";
+					continue;
 				}
 			}
 			
@@ -49,14 +53,27 @@ public:
 					humanTurn = false;
 					botTurn = true; //Transfer Control
 				}
+				else {
+					cout << "You made an invalid move.";
+					continue;
+				}
 			}
 
+			ReloadGameBoard:
 			// Re-draw the board after each move
 			boardView.DrawBoard(board);
 			boardView.UpdateBoard(board);
 		} while (!board.humans[4].IsCaptured() && !board.bots[4].IsCaptured());
 
 		cout << "One of the kings captured" << endl;
+
+		// Whoever just received the control is the one who lost
+		if (humanTurn) {
+			bot.WinsTheRound();
+		}
+		else {
+			human.WinsTheRound();
+		}
 	}
 
 
@@ -70,10 +87,20 @@ private:
 		endCol = 0;
 
 		//ATTENTION: Do error handling for char inputs
+		// ATTENTION: Put an "Enter -1 to serialize and quit anytime inside both these loop"
 		cout << "Enter the coordinates of the dice you want to move (E.g. 1 1) :- ";
-		cin >> startRow >> startCol;
+		while (!(cin >> startRow >> startCol)) {
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			cout << "Improper Input! Try again." << endl;
+		}
+		
 		cout << "Enter the coordinates of the destination (E.g. 5 4) :- ";
-		cin >> endRow >> endCol;
+		while (!(cin >> endRow >> endCol)) {
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			cout << "Improper Input! Try again." << endl;
+		}
 	}
 
 	// Does a toss to determine which team will start the game

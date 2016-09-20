@@ -3,11 +3,24 @@
 
 class Computer : public Player {
 public:
+	Computer() {
+		score = 0;
+	}
+
 	bool Play() {
 		return true;
 		// Calculate all the possibilities and make a move
 	}
 
-private:
+	// Increments the score
+	void WinsTheRound() {
+		score++;
+	}
 
+	int getScore() {
+		return score;
+	}
+
+private:
+	int score;
 };

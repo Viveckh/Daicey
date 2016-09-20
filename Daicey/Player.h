@@ -9,18 +9,11 @@
 class Player {
 public:
 	Player() {
-		wins = 0;
-		score = 0;
 		pathChoice = 0;
 		tempStorage1 = 0;
 		tempStorage2 = 0;
 		counterRowsTraversed = 0;
 		counterColumnsTraversed = 0;
-	}
-
-	// FUNCTIONS FOR RECORDING THE PLAYER STATS
-	void WinsTheRound() {
-		wins++;
 	}
 
 protected:
@@ -136,12 +129,16 @@ protected:
 
 	bool IsValidDestination(Dice dice, Square destination) {
 		
-		// Destination square does not need to be empty, so I commented the below condition
-		// if (destination.GetResident() == NULL) {} If square 
+		// Destination square should either be null or contain a dice of different team other than the one moving.
+		if ((destination.GetResident() == NULL) || (destination.GetResident()->IsBotOperated() && !dice.IsBotOperated()) || (!destination.GetResident()->IsBotOperated() && dice.IsBotOperated())) {
 
-		// (Destination row - source row) + (Destination col - source col) gives the distance between the source and destination squares
-		if (dice.GetTop() == abs(destination.GetRow() - dice.GetRow()) + abs(destination.GetColumn() - dice.GetColumn())) {
-			return true;
+			// (Destination row - source row) + (Destination col - source col) gives the distance between the source and destination squares
+			if (dice.GetTop() == abs(destination.GetRow() - dice.GetRow()) + abs(destination.GetColumn() - dice.GetColumn())) {
+				return true;
+			}
+		}
+		else {
+			cout << "Can't run over your own teammate, bud!" << endl;
 		}
 		return false;
 	}
@@ -352,9 +349,6 @@ protected:
 	}
 
 private:
-	// Variables for Player Stats
-	int score;
-	int wins;		// Stats for the tournament
 	int pathChoice;	// Choice of what type of path to take out of available four types
 
 	// Variables for Player Strategies
