@@ -4,10 +4,11 @@
 #include "Player.h"
 #include "Human.h"
 #include "Game.h"
+#include "Tournament.h"
 
 int main(int argc, char *argv[]) {
-	Game game;
-	game.ImplementGame();
+	Tournament tournament;
+	tournament.PlayTournament();
 
 
 	/*

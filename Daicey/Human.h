@@ -5,9 +5,7 @@
 class Human: public Player {
 public:
 
-	Human() {
-		score = 0;
-	}
+	Human() {}
 
 	// ATTENTION: Validate the input
 	bool Play(int startRow, int startCol, int endRow, int endCol, Board &board, int path = 0) {
@@ -66,16 +64,6 @@ public:
 		return false;
 	}
 
-	// Increments the score
-	void WinsTheRound() {
-		score++;
-	}
-
-	int getScore() {
-		return score;
-	}
-
 private:
 	Notifications notifications;
-	int score;
 };

@@ -25,7 +25,10 @@ public:
 		path = 0;
 	}
 
-	void ImplementGame() {
+
+	// Made this function return a value in order to stop the tournament
+	// Ret value is 'h' for human winner, 'b' for bot winner, and 's' for Serialization
+	char ImplementGame() {
 		// Draw Initial Board
 		boardView.DrawBoard(board);
 		boardView.UpdateBoard(board);
@@ -70,15 +73,14 @@ public:
 			boardView.UpdateBoard(board);
 		} while (!board.humans[4].IsCaptured() && !board.bots[4].IsCaptured());
 
-		// ATTENTION: Tournament class should most likely be static,
-		// It seems better to update the scores in Tournament class
-
 		// Whoever just received the control is the one who lost
 		if (humanTurn) {
-			bot.WinsTheRound();
+			notifications.Msg_GameOver("COMPUTER");
+			return 'b';	// Bot winner
 		}
 		else {
-			human.WinsTheRound();
+			notifications.Msg_GameOver("HUMAN");
+			return 'h';	// Human winner
 		}
 	}
 

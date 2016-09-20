@@ -71,6 +71,26 @@ public:
 		cout << "***************************************************************" << endl;
 	}
 
+	void Msg_DisplayResults(int botScore, int humanScore) {
+		cout << "***************************************************************" << endl;
+		cout << "\t\tTournament Results" << endl;
+		cout << "***************************************************************" << endl;
+		cout << "Computer Wins:	" << botScore << endl;
+		cout << "Human Wins: " << humanScore << endl;
+	}
+
+	void Msg_WantToPlayAgain() {
+		cout << endl << "MSG: Do you want to play another round? (y or n)? ";
+	}
+
+	void DrawDivider() {
+		cout << endl << endl << "-*-*-*-*-********************************************-*-*-*-*-" << endl<< endl;
+	}
+
+	void Msg_GameOver(string winner) {
+		cout << endl << "-*-*-*-*-**********" << winner << " WON**********************************-*-*-*-*-" << endl;
+	}
+
 private:
 
 };
