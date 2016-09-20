@@ -1,5 +1,6 @@
 #pragma once
 #include "Player.h"
+#include "Notifications.h"
 
 class Human: public Player {
 public:
@@ -13,7 +14,7 @@ public:
 		
 		if (IndexOutOfBounds(startRow, startCol, endRow, endCol)) {
 			// Log error here
-			cout << "Input co-ordinates out of bound. Try again!" << endl;
+			notifications.Msg_InputOutOfBounds();
 			return false;
 		}
 		// Decrementing the input values to match the gameboard internal representation in array
@@ -26,16 +27,20 @@ public:
 		if (board.GetSquareResident(startRow, startCol) != NULL) {
 			if (!board.GetSquareResident(startRow, startCol)->IsBotOperated()) {
 				// Checking to see if there is a 90 degree turn			
-				MakeAMove(startRow, startCol, endRow, endCol, board, path);
-				return true;
+				if (MakeAMove(startRow, startCol, endRow, endCol, board, path)) {
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 			else {
-				cout << "Not your player" << endl;
+				notifications.Msg_WrongDice();
 				return false;
 			}
 		}
 		else {
-			cout << "No dices in the square" << endl;
+			notifications.Msg_NoDiceToMove();
 			return false;
 		}
 	}
@@ -71,5 +76,6 @@ public:
 	}
 
 private:
+	Notifications notifications;
 	int score;
 };

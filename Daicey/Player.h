@@ -289,7 +289,7 @@ protected:
 	
 	*/
 
-	void MakeAMove(int startRow, int startCol, int endRow, int endCol, Board &board, int path) {
+	bool MakeAMove(int startRow, int startCol, int endRow, int endCol, Board &board, int path) {
 		//Check if destination is valid, then if path is valid
 		//Then, either make the move or log an error
 		// This can be used for both human or computer after verifying that they are moving their own players.
@@ -342,8 +342,10 @@ protected:
 					notifications.Msg_CrashedWhileMakingTheMove();
 					break;
 				}
+				return true;
 			}
 		}
+		return false;
 
 
 		// This section was already done in the rollup, rolldown functions

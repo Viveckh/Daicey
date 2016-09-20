@@ -3,33 +3,74 @@
 
 class Notifications {
 public:
+	void Msg_ImproperInput() {
+		cout << "ERROR: Why you annoying me with improper inputs? Go, Try again!" << endl;
+	}
+
+	void Msg_EnterOriginCoordinates() {
+		cout << endl << "Enter the coordinates of the dice you want to move (E.g. 1 1) :- ";
+	}
+
+	void Msg_EnterDestinationCoordinates() {
+		cout << "Enter the coordinates of the destination (E.g. 5 4) :- ";
+	}
+
+	void Msg_InputOutOfBounds() {
+		cout << "ERROR: Input co-ordinates out of bound. *Rolls eyes* Try again!" << endl;
+	}
+
+	void Msg_WrongDice() {
+		cout << "ERROR: Woah! Foul! That ain't your dice to move homie!" << endl;
+	}
+
+	void Msg_NoDiceToMove() {
+		cout << "ERROR: Don't you see there is no dice to move in that co-ordinate?" << endl;
+	}
+
 	void Msg_InvalidMove() {
-		cout << endl << "ERROR: Invalid Move!" << endl << endl;
+		cout << "ERROR: Why you always trying Invalid Moves?" << endl;
 	}
 
 	void Msg_RunningOverOwnDice() {
-		cout << endl << "MSG: Are you really trying to capture your own dice, bud?" << endl << endl;
+		cout << "MSG: Are you really trying to capture your own dice, bonehead?" << endl;
 	}
 
 	void Msg_CapturedAnOpponent() {
-		cout << endl << "MSG: You just captured an opponent dice. Great Job!" << endl << endl;
+		cout << endl << "MSG: You just captured an opponent dice. Impressive for a Knucklehead? Eh!" << endl;
 	}
 
 	void Msg_NoValidPath() {
-		cout << endl << "ERROR: No Valid Path was found to get to your selected destination." << endl << endl;
+		cout << "ERROR: Yo numskull! NO Valid Path was found to get to your selected destination. BOOO!" << endl;
+	}
+
+	void Msg_90DegreePathSelection() {
+		cout << "90 Degree turn detected. Enter 1 to go vertically first, or 2 to go laterally first :- ";
 	}
 
 	void Msg_90DegreePathSelectionNotProcessed() {
-		cout << endl << "MSG: We're sorry, but your path selection for the 90 Degree turn was Invalid. So, we automatically chose the alternate route for you." << endl << endl;
+		cout << "MSG: We're sorry, but your DUMB path selection for the 90 Degree turn was Invalid." << endl;
+		cout << "So, we - the smart bots species - automatically chose the alternate route for you." << endl;
 	}
 
 	void Msg_NatureOfPathTaken(string path) {
-		cout << endl << "MSG: A " << path << " was taken to get to the destination" << endl << endl;
+		cout << "MSG: A " << path << " path was taken to get to the destination" << endl;
 	}
 
 	void Msg_CrashedWhileMakingTheMove() {
-		cout << endl << "ERROR: The program crashed while making the move." << endl << endl;
+		cout << "ERROR: Whoopsie Daisy! The program crashed while making the move." << endl;
 	}
+
+	void Msg_TossResults(string winner) {
+		cout << "MSG: " << winner << " won the toss!" << endl;
+	}
+
+	void Msg_Turns(string player) {
+		cout << endl;
+		cout << "***************************************************************" << endl;
+		cout << "\t\t" << player << endl;
+		cout << "***************************************************************" << endl;
+	}
+
 private:
 
 };

@@ -8,6 +8,7 @@
 #include "Computer.h"
 #include "BoardView.h"
 #include "Board.h"
+#include "Notifications.h"
 
 class Game {
 public:
@@ -39,23 +40,26 @@ public:
 					//Transfer Control
 					botTurn = false;
 					humanTurn = true;
+					notifications.Msg_Turns("BOARD AFTER COMPUTER'S MOVE");
 					goto ReloadGameBoard;	//Using Goto to prevent human's loop from running
 				}
 				else {
-					cout << "Bot made an invalid move.";
+					notifications.Msg_InvalidMove();
 					continue;
 				}
 			}
 			
 			// If it is human's turn
 			if (humanTurn) {
+
 				GetUserInput();
 				if (human.Play(startRow, startCol, endRow, endCol, board, path)) {
 					humanTurn = false;
 					botTurn = true; //Transfer Control
+					notifications.Msg_Turns("BOARD AFTER HUMAN'S MOVE");
 				}
 				else {
-					cout << "You made an invalid move.";
+					notifications.Msg_InvalidMove();
 					continue;
 				}
 			}
@@ -65,8 +69,6 @@ public:
 			boardView.DrawBoard(board);
 			boardView.UpdateBoard(board);
 		} while (!board.humans[4].IsCaptured() && !board.bots[4].IsCaptured());
-
-		cout << "One of the kings captured" << endl;
 
 		// ATTENTION: Tournament class should most likely be static,
 		// It seems better to update the scores in Tournament class
@@ -93,27 +95,27 @@ private:
 
 		//ATTENTION: Do error handling for char inputs
 		// ATTENTION: Put an "Enter -1 to serialize and quit anytime inside both these loop"
-		cout << "Enter the coordinates of the dice you want to move (E.g. 1 1) :- ";
+		notifications.Msg_EnterOriginCoordinates();
 		while (!(cin >> startRow >> startCol)) {
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-			cout << "Improper Input! Try again." << endl;
+			notifications.Msg_ImproperInput();
 		}
 		
-		cout << "Enter the coordinates of the destination (E.g. 5 4) :- ";
+		notifications.Msg_EnterDestinationCoordinates();
 		while (!(cin >> endRow >> endCol)) {
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-			cout << "Improper Input! Try again." << endl;
+			notifications.Msg_ImproperInput();
 		}
 
 		// If a 90 degree turn involved, ask user for the path choice
 		if ((startRow != endRow) && (startCol != endCol)) {
-			cout << "90 Degree turn detected. Enter 1 to go vertically first, or 2 to go laterally first :- ";
+			notifications.Msg_90DegreePathSelection();
 			while (!(cin >> path)) {
 				cin.clear();
 				cin.ignore(numeric_limits<streamsize>::max(), '\n');
-				cout << "Improper Input! Try again." << endl;
+				notifications.Msg_ImproperInput();
 			}
 		}
 	}
@@ -130,11 +132,11 @@ private:
 		// Whoever has the highest number on top - wins the toss
 		if (humanDieToss > botDieToss) {
 			humanTurn = true;
-			cout << "You won the Toss" << endl;
+			notifications.Msg_TossResults("You");
 		}
 		else {
 			botTurn = true;
-			cout << "The Computer won the Toss" << endl;
+			notifications.Msg_TossResults("Computer");
 		}
 	}
 
@@ -145,6 +147,7 @@ private:
 	// Game Board
 	Board board;
 	BoardView boardView;
+	Notifications notifications;
 
 	// Players
 	Human human;

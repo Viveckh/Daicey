@@ -15,6 +15,7 @@ public:
 
 	void DrawBoard(Board &board) {
 		//Drawing the board inverted cause zero row is supposed to be at the bottom
+		cout << endl;
 		for (int row = 7; row >= 0; row--) {
 			cout << abs(row + 1) << "\t";
 			for (int col = 0; col < 9; col++) {
