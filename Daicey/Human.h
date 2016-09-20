@@ -9,7 +9,7 @@ public:
 	}
 
 	// ATTENTION: Validate the input
-	bool Play(int startRow, int startCol, int endRow, int endCol, Board &board) {
+	bool Play(int startRow, int startCol, int endRow, int endCol, Board &board, int path = 0) {
 		
 		if (IndexOutOfBounds(startRow, startCol, endRow, endCol)) {
 			// Log error here
@@ -25,7 +25,8 @@ public:
 		// Verify the dice is not bot operated so that the dice belongs to human player
 		if (board.GetSquareResident(startRow, startCol) != NULL) {
 			if (!board.GetSquareResident(startRow, startCol)->IsBotOperated()) {
-				MakeAMove(startRow, startCol, endRow, endCol, board);
+				// Checking to see if there is a 90 degree turn			
+				MakeAMove(startRow, startCol, endRow, endCol, board, path);
 				return true;
 			}
 			else {

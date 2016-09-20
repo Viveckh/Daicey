@@ -21,6 +21,7 @@ public:
 		startCol = 0;
 		endRow = 0;
 		endCol = 0;
+		path = 0;
 	}
 
 	void ImplementGame() {
@@ -49,7 +50,7 @@ public:
 			// If it is human's turn
 			if (humanTurn) {
 				GetUserInput();
-				if (human.Play(startRow, startCol, endRow, endCol, board)) {
+				if (human.Play(startRow, startCol, endRow, endCol, board, path)) {
 					humanTurn = false;
 					botTurn = true; //Transfer Control
 				}
@@ -66,6 +67,9 @@ public:
 		} while (!board.humans[4].IsCaptured() && !board.bots[4].IsCaptured());
 
 		cout << "One of the kings captured" << endl;
+
+		// ATTENTION: Tournament class should most likely be static,
+		// It seems better to update the scores in Tournament class
 
 		// Whoever just received the control is the one who lost
 		if (humanTurn) {
@@ -85,6 +89,7 @@ private:
 		startCol = 0;
 		endRow = 0;
 		endCol = 0;
+		path = 0;
 
 		//ATTENTION: Do error handling for char inputs
 		// ATTENTION: Put an "Enter -1 to serialize and quit anytime inside both these loop"
@@ -100,6 +105,16 @@ private:
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 			cout << "Improper Input! Try again." << endl;
+		}
+
+		// If a 90 degree turn involved, ask user for the path choice
+		if ((startRow != endRow) && (startCol != endCol)) {
+			cout << "90 Degree turn detected. Enter 1 to go vertically first, or 2 to go laterally first :- ";
+			while (!(cin >> path)) {
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+				cout << "Improper Input! Try again." << endl;
+			}
 		}
 	}
 
@@ -144,4 +159,5 @@ private:
 	int startCol;
 	int endRow;
 	int endCol;
+	int path;		//1 for vertical first, 2 for lateral first
 };

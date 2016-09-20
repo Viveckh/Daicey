@@ -10,6 +10,7 @@ class Player {
 public:
 	Player() {
 		pathChoice = 0;
+		multiplePathPossible = false;
 		tempStorage1 = 0;
 		tempStorage2 = 0;
 		counterRowsTraversed = 0;
@@ -148,6 +149,7 @@ protected:
 		counterRowsTraversed = 0;
 		counterColumnsTraversed = 0;
 		pathChoice = 0;
+		multiplePathPossible = false;
 
 		// CASE 1
 		// If both the rows & columns differ in the destination, it means this is a frontal-lateral combined move attempt
@@ -159,17 +161,27 @@ protected:
 			// Path 1 - First row traversal, then Column
 			if (TraversedRowsWithoutBlockade(dice, destination, board) && TraversedColumnsWithoutBlockade(dice, destination, board)) {
 				pathChoice = 1;
-				return true;
 			}
 
 			// In case we need to check the validity of second path, the dice needs to be reverted back to its original spot 
 			// based on the counters gathered while traversing above
 			dice.SetRow(counterRowsTraversed, false);
 			dice.SetColumn(counterColumnsTraversed, false);
-
+		
 			// Path 2 - First column traversal, then row
 			if (TraversedColumnsWithoutBlockade(dice, destination, board) && TraversedRowsWithoutBlockade(dice, destination, board)) {
+				// If the previous path was valid too, then there are surely two paths
+				if (pathChoice == 1) {
+					multiplePathPossible = true;
+					return true;
+				}
+
 				pathChoice = 2;
+				return true;
+			}
+
+			// If the first path was the only one valid
+			if (pathChoice == 1) {
 				return true;
 			}
 
@@ -276,13 +288,20 @@ protected:
 	
 	*/
 
-	void MakeAMove(int startRow, int startCol, int endRow, int endCol, Board &board) {
+	void MakeAMove(int startRow, int startCol, int endRow, int endCol, Board &board, int path) {
 		//Check if destination is valid, then if path is valid
 		//Then, either make the move or log an error
 		// This can be used for both human or computer after verifying that they are moving their own players.
 		// Path 1 and 2 need to offset the changes done by the first function, and hence the startRow/startCol has a counter added in the second function
 		if (IsValidDestination(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol))) {
 			if (IsPathValid(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board)) {
+				
+				// If user has input a preferred path in case of a 90 degree turn, we need to honor that
+				if (path != 0) {
+					if (path == 1 && pathChoice == 1) { pathChoice = 1; }
+					if ((path == 2) && (pathChoice == 2 || multiplePathPossible)) { pathChoice = 2; }
+				}
+
 				cout << "Took path " << pathChoice << endl;
 				switch (pathChoice)
 				{
@@ -348,8 +367,19 @@ protected:
 		} while (dice.GetColumn() != destination.GetColumn());
 	}
 
+	void SetPathChoice(int value) {
+		if (value > 0 && value <= 2) {
+			pathChoice = value;
+		}
+	}
+
+	bool IsMultiplePathPossible() {
+		return multiplePathPossible;
+	}
+
 private:
 	int pathChoice;	// Choice of what type of path to take out of available four types
+	bool multiplePathPossible;
 
 	// Variables for Player Strategies
 	int tempStorage1;
