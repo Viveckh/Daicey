@@ -5,6 +5,7 @@
 #pragma once
 #include "Board.h"
 #include "Dice.h"
+#include "Notifications.h"
 
 class Player {
 public:
@@ -28,98 +29,95 @@ protected:
 	// ALSO, don't forget to update the newly occupied coordinate and release the currently occupied square.
 	void RollUp(Dice &dice, Board &board) {
 
-		if (dice.GetRow() < 7) {
-			tempStorage1 = dice.GetFront();
-			tempStorage2 = dice.GetRear();
+		//if (dice.GetRow() < 7) {}		Put this wrapper around the entire function to validate coordinates
+		tempStorage1 = dice.GetFront();
+		tempStorage2 = dice.GetRear();
 
-			dice.SetFront(dice.GetTop());
-			dice.SetRear(dice.GetBottom());
-			dice.SetBottom(tempStorage1);
-			dice.SetTop(tempStorage2);
+		dice.SetFront(dice.GetTop());
+		dice.SetRear(dice.GetBottom());
+		dice.SetBottom(tempStorage1);
+		dice.SetTop(tempStorage2);
 
-			//Set the currently occupied square to empty (also capturing the current dice, if in destination), and place our dice in the next square
-			board.SetSquareVacant(dice.GetRow(), dice.GetColumn());
-			dice.SetRow(1, true);
+		//Set the currently occupied square to empty (also capturing the current dice, if in destination), and place our dice in the next square
+		board.SetSquareVacant(dice.GetRow(), dice.GetColumn());
+		dice.SetRow(1, true);
 
-			//This capture statement will only be executed at the destination square if path checking is done beforehand
-			if (board.GetSquareResident(dice.GetRow(), dice.GetColumn()) != NULL) {
-				board.GetSquareResident(dice.GetRow(), dice.GetColumn())->SetCaptured(true);
-			}
+		//This capture statement will only be executed at the destination square if path checking is done beforehand
+		if (board.GetSquareResident(dice.GetRow(), dice.GetColumn()) != NULL) {
+			board.GetSquareResident(dice.GetRow(), dice.GetColumn())->SetCaptured(true);
+			notifications.Msg_CapturedAnOpponent();
+		}
 			
-			board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
-		}
-		else {
-			cout << "INVALID MOVE" << endl;
-		}
+		board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
 	}
 
 	void RollDown(Dice &dice, Board &board) {
-		if (dice.GetRow() > 0) {
-			tempStorage1 = dice.GetFront();
-			tempStorage2 = dice.GetRear();
+		//if (dice.GetRow() > 0) {}		Put this wrapper around the entire function to validate coordinates
+		tempStorage1 = dice.GetFront();
+		tempStorage2 = dice.GetRear();
 
-			dice.SetRear(dice.GetTop());
-			dice.SetFront(dice.GetBottom());
-			dice.SetTop(tempStorage1);
-			dice.SetBottom(tempStorage2);
+		dice.SetRear(dice.GetTop());
+		dice.SetFront(dice.GetBottom());
+		dice.SetTop(tempStorage1);
+		dice.SetBottom(tempStorage2);
 
-			//Set the currently occupied square to empty (also capturing the current dice, if in destination), and place our dice in the next square
-			board.SetSquareVacant(dice.GetRow(), dice.GetColumn());
-			dice.SetRow(1, false);
+		//Set the currently occupied square to empty (also capturing the current dice, if in destination), and place our dice in the next square
+		board.SetSquareVacant(dice.GetRow(), dice.GetColumn());
+		dice.SetRow(1, false);
 			
-			//This capture statement will only be executed at the destination square if path checking is done beforehand
-			if (board.GetSquareResident(dice.GetRow(), dice.GetColumn()) != NULL) {
-				board.GetSquareResident(dice.GetRow(), dice.GetColumn())->SetCaptured(true);
-			}
-			
-			board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
+		//This capture statement will only be executed at the destination square if path checking is done beforehand
+		if (board.GetSquareResident(dice.GetRow(), dice.GetColumn()) != NULL) {
+			board.GetSquareResident(dice.GetRow(), dice.GetColumn())->SetCaptured(true);
+			notifications.Msg_CapturedAnOpponent();
 		}
+			
+		board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
 	}
 
 	void RollLeft(Dice &dice, Board &board) {
-		if (dice.GetColumn() > 0) {
-			tempStorage1 = dice.GetLeft();
-			tempStorage2 = dice.GetRight();
+		// if (dice.GetColumn() > 0) {}		Put this wrapper around the entire function to validate coordinates
+		tempStorage1 = dice.GetLeft();
+		tempStorage2 = dice.GetRight();
 
-			dice.SetLeft(dice.GetTop());
-			dice.SetRight(dice.GetBottom());
-			dice.SetBottom(tempStorage1);
-			dice.SetTop(tempStorage2);
+		dice.SetLeft(dice.GetTop());
+		dice.SetRight(dice.GetBottom());
+		dice.SetBottom(tempStorage1);
+		dice.SetTop(tempStorage2);
 
-			//Set the currently occupied square to empty (also capturing the current dice, if in destination), and place our dice in the next square
-			board.SetSquareVacant(dice.GetRow(), dice.GetColumn());
-			dice.SetColumn(1, false);
+		//Set the currently occupied square to empty (also capturing the current dice, if in destination), and place our dice in the next square
+		board.SetSquareVacant(dice.GetRow(), dice.GetColumn());
+		dice.SetColumn(1, false);
 
-			//This capture statement will only be executed at the destination square if path checking is done beforehand
-			if (board.GetSquareResident(dice.GetRow(), dice.GetColumn()) != NULL) {
-				board.GetSquareResident(dice.GetRow(), dice.GetColumn())->SetCaptured(true);
-			}
-
-			board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
+		//This capture statement will only be executed at the destination square if path checking is done beforehand
+		if (board.GetSquareResident(dice.GetRow(), dice.GetColumn()) != NULL) {
+			board.GetSquareResident(dice.GetRow(), dice.GetColumn())->SetCaptured(true);
+			notifications.Msg_CapturedAnOpponent();
 		}
+
+		board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
 	}
 
 	void RollRight(Dice &dice, Board &board) {
-		if (dice.GetColumn() < 8) {
-			tempStorage1 = dice.GetLeft();
-			tempStorage2 = dice.GetRight();
+		// if (dice.GetColumn() < 8) {}		Put this wrapper around the entire function to validate coordinates
+		tempStorage1 = dice.GetLeft();
+		tempStorage2 = dice.GetRight();
 
-			dice.SetRight(dice.GetTop());
-			dice.SetLeft(dice.GetBottom());
-			dice.SetTop(tempStorage1);
-			dice.SetBottom(tempStorage2);
+		dice.SetRight(dice.GetTop());
+		dice.SetLeft(dice.GetBottom());
+		dice.SetTop(tempStorage1);
+		dice.SetBottom(tempStorage2);
 
-			//Set the currently occupied square to empty (also capturing the current dice, if in destination), and place our dice in the next square
-			board.SetSquareVacant(dice.GetRow(), dice.GetColumn());
-			dice.SetColumn(1, true);
+		//Set the currently occupied square to empty (also capturing the current dice, if in destination), and place our dice in the next square
+		board.SetSquareVacant(dice.GetRow(), dice.GetColumn());
+		dice.SetColumn(1, true);
 
-			//This capture statement will only be executed at the destination square if path checking is done beforehand
-			if (board.GetSquareResident(dice.GetRow(), dice.GetColumn()) != NULL) {
-				board.GetSquareResident(dice.GetRow(), dice.GetColumn())->SetCaptured(true);
-			}
-
-			board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
+		//This capture statement will only be executed at the destination square if path checking is done beforehand
+		if (board.GetSquareResident(dice.GetRow(), dice.GetColumn()) != NULL) {
+			board.GetSquareResident(dice.GetRow(), dice.GetColumn())->SetCaptured(true);
+			notifications.Msg_CapturedAnOpponent();
 		}
+
+		board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
 	}
 
 	/*
@@ -137,9 +135,12 @@ protected:
 			if (dice.GetTop() == abs(destination.GetRow() - dice.GetRow()) + abs(destination.GetColumn() - dice.GetColumn())) {
 				return true;
 			}
+			else {
+				notifications.Msg_InvalidMove();
+			}
 		}
 		else {
-			cout << "Can't run over your own teammate, bud!" << endl;
+			notifications.Msg_RunningOverOwnDice();
 		}
 		return false;
 	}
@@ -186,7 +187,7 @@ protected:
 			}
 
 			//If both the path couldn't return true, then the path is invalid
-			cout << "Invalid path in route 1 and 2" << endl;
+			notifications.Msg_NoValidPath();
 			return false;
 		}
 
@@ -199,7 +200,7 @@ protected:
 				return true;
 			}
 			else {
-				cout << "Invalid path in route 3" << endl;
+				notifications.Msg_NoValidPath();
 				return false;
 			}
 		}
@@ -213,7 +214,7 @@ protected:
 				return true;
 			}
 			else {
-				cout << "Invalid path in route 4" << endl;
+				notifications.Msg_NoValidPath();
 				return false;
 			}
 		}
@@ -298,33 +299,47 @@ protected:
 				
 				// If user has input a preferred path in case of a 90 degree turn, we need to honor that
 				if (path != 0) {
-					if (path == 1 && pathChoice == 1) { pathChoice = 1; }
-					if ((path == 2) && (pathChoice == 2 || multiplePathPossible)) { pathChoice = 2; }
+					if (path == 1 && pathChoice == 1) { 
+						pathChoice = 1; 
+					}
+
+					if ((path == 2) && (pathChoice == 2 || multiplePathPossible)) { 
+						pathChoice = 2; 
+					}
+					
+					// Display a notification if the user's choice of path wasn't valid and had to be superceded by the next best route
+					if (path != pathChoice){
+						notifications.Msg_90DegreePathSelectionNotProcessed();
+					}
 				}
 
-				cout << "Took path " << pathChoice << endl;
 				switch (pathChoice)
 				{
 				// First vertically, a 90 degree turn, then laterally
 				case 1:
 					KeepRollingVertically(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
 					KeepRollingLaterally(*board.GetSquareResident(startRow + counterRowsTraversed, startCol), board.GetSquareAtLocation(endRow, endCol), board);
+					notifications.Msg_NatureOfPathTaken("VERTICAL & LATERAL");
 					break;
 				// First laterally, a 90 degree turn, then laterally
 				case 2:
 					KeepRollingLaterally(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
 					KeepRollingVertically(*board.GetSquareResident(startRow, startCol + counterColumnsTraversed), board.GetSquareAtLocation(endRow, endCol), board);
+					notifications.Msg_NatureOfPathTaken("LATERAL & VERTICAL");
 					break;
 				// Vertically only
 				case 3:
 					KeepRollingVertically(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
+					notifications.Msg_NatureOfPathTaken("VERTICAL");
 					break;
 				// Laterally only
 				case 4:
 					KeepRollingLaterally(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
+					notifications.Msg_NatureOfPathTaken("LATERAL");
 					break;
 				default:
 					//ATTENTION: LOG ERROR SAYING THE PATH DESTINATION COULDN'T BE SET FOR SOME REASON
+					notifications.Msg_CrashedWhileMakingTheMove();
 					break;
 				}
 			}
@@ -367,16 +382,6 @@ protected:
 		} while (dice.GetColumn() != destination.GetColumn());
 	}
 
-	void SetPathChoice(int value) {
-		if (value > 0 && value <= 2) {
-			pathChoice = value;
-		}
-	}
-
-	bool IsMultiplePathPossible() {
-		return multiplePathPossible;
-	}
-
 private:
 	int pathChoice;	// Choice of what type of path to take out of available four types
 	bool multiplePathPossible;
@@ -388,4 +393,6 @@ private:
 	// Counting variables for traversals to reset back the die position
 	int counterRowsTraversed;
 	int counterColumnsTraversed;
+
+	Notifications notifications;
 };

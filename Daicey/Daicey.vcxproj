@@ -115,7 +115,7 @@
     <ClInclude Include="BoardView.h" />
     <ClInclude Include="Computer.h" />
     <ClInclude Include="Dice.h" />
-    <ClInclude Include="ErrorDisplay.h" />
+    <ClInclude Include="Notifications.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Human.h" />
     <ClInclude Include="Player.h" />
