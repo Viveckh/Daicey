@@ -39,7 +39,7 @@ public:
 		do {
 			// If it is Computer's turn
 			if (botTurn) {
-				if (bot.Play()) {
+				if (bot.Play(board)) {
 					//Transfer Control
 					botTurn = false;
 					humanTurn = true;
