@@ -91,6 +91,15 @@ public:
 		cout << endl << "-*-*-*-*-**********" << winner << " WON**********************************-*-*-*-*-" << endl;
 	}
 
+	void Msg_SerializePrompt() {
+		cout << "Type 'serialize' to serialize, anything else to continue :- ";
+	}
+
+	void Msg_SerializednExited(string status) {
+		cout << "Serialization " <<  status << " . The game will exit now." << endl;
+		DrawDivider();
+	}
+
 private:
 
 };

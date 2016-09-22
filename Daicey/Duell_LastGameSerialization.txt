@@ -1,0 +1,11 @@
+C56	C15	C21	C62	C11	C62	C21	C15	C56	
+0	0	0	0	0	H12	0	0	0	
+0	0	0	0	0	0	0	0	0	
+0	0	0	0	0	0	0	0	0	
+0	0	0	0	0	0	0	0	0	
+0	0	0	0	0	0	0	0	0	
+0	0	0	0	0	0	0	0	0	
+H56	H15	H21	H62	H11	0	H21	H15	H56	
+Computer Wins: 0
+Human Wins: 0
+Next Player: Computer

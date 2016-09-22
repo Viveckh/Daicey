@@ -10,6 +10,7 @@ public:
 		gameResult = ' ';
 		quit = false;
 		temp = ' ';
+		nextPlayer = "";
 	}
 
 
@@ -28,10 +29,25 @@ public:
 				botScore++;
 			}
 
-			// ATTENTION: You can implement Serialization in a similar if condition
-			if (gameResult == 's') {
-				// Serialize the game
-				break;	// Break the loop to stop the game
+			// 'S' refers to serialize during computer's turn & 's' refers to serialize during human's turn
+			if (gameResult == 'S' || gameResult == 's') {
+				
+				// Store the next player in a string
+				if (gameResult == 'S') {
+					nextPlayer = "Computer";
+				}
+				else {
+					nextPlayer = "Human";
+				}
+
+				// Write the serialized output to a file and exit
+				if (game.getBoardView().WriteToFile(botScore, humanScore, nextPlayer)) {
+					notifications.Msg_SerializednExited("SUCCESSFUL");
+				}
+				else {
+					notifications.Msg_SerializednExited("FAILED");
+				}
+				return;
 			}
 
 			notifications.Msg_WantToPlayAgain();
@@ -40,12 +56,14 @@ public:
 				cin.ignore(numeric_limits<streamsize>::max(), '\n');
 				notifications.Msg_ImproperInput();
 			}
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
 			if (temp == 'n') {
 				quit = true;
 			}
 
 			notifications.DrawDivider();
-		} while (gameResult != 's' && !quit);
+		} while (!quit);
 
 		// ATTENTION: Print out the tournament results and serialize if asked to do so
 		notifications.Msg_DisplayResults(botScore, humanScore);
@@ -60,5 +78,6 @@ private:
 	bool quit;
 
 	char temp;
+	string nextPlayer;
 	Notifications notifications;
 };

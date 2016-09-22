@@ -31,11 +31,11 @@ public:
 	char ImplementGame() {
 		// Draw Initial Board
 		boardView.DrawBoard(board);
-		boardView.UpdateBoard(board);
+		boardView.UpdateSerializedBoard(board);
 		
 		TossToBegin();
 
-		// Continue the loop until one of the king is captured, or user chooses to serialize and quit
+		// Continue the loop until one of the king is captured, one of the key squares gets occupied or user chooses to serialize and quit
 		do {
 			// If it is Computer's turn
 			if (botTurn) {
@@ -70,22 +70,75 @@ public:
 			ReloadGameBoard:
 			// Re-draw the board after each move
 			boardView.DrawBoard(board);
-			boardView.UpdateBoard(board);
-		} while (!board.humans[4].IsCaptured() && !board.bots[4].IsCaptured());
+			boardView.UpdateSerializedBoard(board);
 
-		// Whoever just received the control is the one who lost
-		if (humanTurn) {
-			notifications.Msg_GameOver("COMPUTER");
-			return 'b';	// Bot winner
+			// If game over condition met
+			if (GameOverConditionMet()) {
+				// Whoever just received the control is the one who lost
+				if (humanTurn) {
+					notifications.Msg_GameOver("COMPUTER");
+					return 'b';	// Bot winner
+				}
+				else {
+					notifications.Msg_GameOver("HUMAN");
+					return 'h';	// Human winner
+				}
+			}
+
+			// Stop the game and Return if user wants to serialize
+			// return 'S' if serializing during computer's turn, 's' if serializing during human's turn
+			if (UserWantsToSerialize()) {
+				if (botTurn) { return 'S';  }
+				if (humanTurn) { return 's'; }
+			}
+ 		} while (1);
+	}
+
+	BoardView getBoardView() {
+		return boardView;
+	}
+
+private:
+	// Returns true if user wants to serialize
+	bool UserWantsToSerialize() {
+		notifications.Msg_SerializePrompt();
+		//cin >> wishToSerialize;
+		while (!(cin >> wishToSerialize)) {
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			notifications.Msg_ImproperInput();
 		}
-		else {
-			notifications.Msg_GameOver("HUMAN");
-			return 'h';	// Human winner
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		if (wishToSerialize == "serialize") {
+			return true;
 		}
+		return false;
 	}
 
 
-private:
+	bool GameOverConditionMet() {
+		//If one of the kings captured
+		if (board.humans[4].IsCaptured() || board.bots[4].IsCaptured()) {
+			return true;
+		}
+
+		//If the human key square is occupied by a bot die
+		if (board.IsSquareOccupied(0, 4)) {
+			if (board.GetSquareResident(0, 4)->IsBotOperated()) {
+				return true;
+			}
+		}
+
+		//If the computer key square is occupied by a human die
+		if (board.IsSquareOccupied(7, 4)) {
+			if (!board.GetSquareResident(7, 4)->IsBotOperated()) {
+				return true;
+			}
+		}
+
+		//If none of the game over conditions are met
+		return false;
+	}
 
 	// Gets user input if it is a human's turn
 	void GetUserInput() {
@@ -103,6 +156,7 @@ private:
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 			notifications.Msg_ImproperInput();
 		}
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		
 		notifications.Msg_EnterDestinationCoordinates();
 		while (!(cin >> endRow >> endCol)) {
@@ -110,6 +164,7 @@ private:
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 			notifications.Msg_ImproperInput();
 		}
+		//cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
 		// If a 90 degree turn involved, ask user for the path choice
 		if ((startRow != endRow) && (startCol != endCol)) {
@@ -120,6 +175,7 @@ private:
 				notifications.Msg_ImproperInput();
 			}
 		}
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	}
 
 	// Does a toss to determine which team will start the game
@@ -165,4 +221,5 @@ private:
 	int endRow;
 	int endCol;
 	int path;		//1 for vertical first, 2 for lateral first
+	string wishToSerialize;
 };

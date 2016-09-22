@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "stdafx.h"
 #include "Square.h"
 #include "Dice.h"
 #include "Board.h"
@@ -11,7 +12,9 @@ class BoardView {
 public:
 
 	// Default Constructor
-	BoardView() {}
+	BoardView() {
+		fileName = "C:\\Duell_LastGameSerialization.txt";
+	}
 
 	void DrawBoard(Board &board) {
 		//Drawing the board inverted cause zero row is supposed to be at the bottom
@@ -43,7 +46,7 @@ public:
 	
 	
 	// Stores the game state in a multidimensional string array.
-	void UpdateBoard(Board &board) {
+	void UpdateSerializedBoard(Board &board) {
 		for (int row = 7; row >= 0; row--) {
 			for (int col = 0; col < 9; col++) {
 				serializedGameBoard[row][col].assign("0");
@@ -62,6 +65,32 @@ public:
 			}
 			//cout << endl;
 		}
+	}
+
+	// Writing serialized game state along with tournament history results to file
+	bool WriteToFile(int botWins, int humanWins, string nextPlayer) {
+		// ADD TRUE/FALSE
+		
+		ofstream writer;
+		writer.open(fileName, ofstream::out | ofstream::trunc);
+		if (writer.fail()) {
+			return false;
+		}
+
+		// Writing the board first
+		for (int row = 7; row >= 0; row--) {
+			for (int col = 0; col < 9; col++) {
+				writer << serializedGameBoard[row][col] << '\t';
+			}
+			writer << endl;
+		}
+
+		// Writing the number of wins and next Player
+		writer << "Computer Wins: " << botWins << endl;
+		writer << "Human Wins: " << humanWins << endl;
+		writer << "Next Player: " << nextPlayer << endl;
+		writer.close();
+		return true;
 	}
 
 	// Print out the captured players
@@ -85,4 +114,5 @@ public:
 
 private:
 	string serializedGameBoard[8][9];
+	string fileName;
 };

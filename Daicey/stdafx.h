@@ -22,8 +22,9 @@
 #include <iomanip>
 #include <windows.h>
 #include <map>
-#include <fstream>
+#include <istream>
 #include <ostream>
+#include <fstream>
 #include <sstream>
 #include <vector>
 #include <algorithm>
