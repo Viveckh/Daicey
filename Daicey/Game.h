@@ -31,7 +31,6 @@ public:
 	char ImplementGame() {
 		// Draw Initial Board
 		boardView.DrawBoard(board);
-		boardView.UpdateSerializedBoard(board);
 		
 		TossToBegin();
 
@@ -70,7 +69,6 @@ public:
 			ReloadGameBoard:
 			// Re-draw the board after each move
 			boardView.DrawBoard(board);
-			boardView.UpdateSerializedBoard(board);
 
 			// If game over condition met
 			if (GameOverConditionMet()) {
@@ -94,8 +92,8 @@ public:
  		} while (1);
 	}
 
-	BoardView getBoardView() {
-		return boardView;
+	Board getGameBoard() {
+		return board;
 	}
 
 private:

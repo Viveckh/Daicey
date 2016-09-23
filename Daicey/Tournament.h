@@ -1,6 +1,7 @@
 #pragma once
 #include "Notifications.h"
 #include "Game.h"
+#include "Serializer.h"
 
 class Tournament {
 public:
@@ -41,7 +42,7 @@ public:
 				}
 
 				// Write the serialized output to a file and exit
-				if (game.getBoardView().WriteToFile(botScore, humanScore, nextPlayer)) {
+				if (serializer.WriteToFile(game.getGameBoard(), botScore, humanScore, nextPlayer)) {
 					notifications.Msg_SerializednExited("SUCCESSFUL");
 				}
 				else {
@@ -71,6 +72,8 @@ public:
 	}
 
 private:
+	Serializer serializer;
+
 	int humanScore;
 	int botScore;
 
