@@ -1,4 +1,5 @@
 #pragma once
+#include "stdafx.h"
 #include "Board.h"
 
 class Serializer {
@@ -31,6 +32,49 @@ public:
 		writer << "Human Wins: " << humanWins << endl;
 		writer << "Next Player: " << nextPlayer << endl;
 		writer.close();
+		return true;
+	}
+
+	bool ReadAFile(/*string fileName, Board &board, int &botWins, int &humanWins, string &nextPlayer*/) {
+		ifstream reader;
+		string line;
+		istringstream lineStream;
+
+		reader.open(fileName, ofstream::in);
+		if (reader.fail()) {
+			return false;
+		}
+
+		// Reading the board
+		for (int row = 7; row >= 0; row--) {
+			getline(reader, line);
+			//stringstream lineStream(line);
+			lineStream.clear();
+			lineStream.str(line);
+			lineStream >> noskipws;	//Initializing skip whitespaces
+			for (int col = 0; col < 9; col++) {
+				//getline(lineStream, serializedGameBoard[row][col], '\t');
+				lineStream >> ws >> serializedGameBoard[row][col] >> ws;	// ws is whitespace skipper
+				cout << serializedGameBoard[row][col] << "\t";
+			}
+			cout << endl;
+		}
+
+		// ATTENTION: Regex expressions below aren't working for some reason. Diagnose it
+		//regex number();
+		regex player("a");
+
+		while (!reader.eof()) {
+			getline(reader, line);
+			if (regex_match(line, player)) {
+				cout << "Match Found";
+			}
+			cout << line << endl;
+			lineStream.clear();
+			lineStream.str(line);
+		}
+
+		reader.close();
 		return true;
 	}
 

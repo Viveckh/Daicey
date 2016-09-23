@@ -5,11 +5,13 @@
 #include "Human.h"
 #include "Game.h"
 #include "Tournament.h"
+#include "Serializer.h"
 
 int main(int argc, char *argv[]) {
-	Tournament tournament;
-	tournament.PlayTournament();
-
+	//Tournament tournament;
+	//tournament.PlayTournament();
+	Serializer serialize;
+	serialize.ReadAFile();
 
 	/*
 	Board board;

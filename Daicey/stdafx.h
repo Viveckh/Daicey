@@ -30,6 +30,7 @@
 #include <algorithm>
 #include <time.h>
 #include <limits>
+#include <regex>
 
 // Own Header files globally used
 
