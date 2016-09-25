@@ -111,48 +111,88 @@ public:
 
 private:
 	void SetBoard(Board &board) {
+		// This one is for going through the Human's player dices
 		int humanCount = 0;
 		int botCount = 0;
+
+		// This one is for temporary purposes 
+		int tempHumanIndex = 0;
+		int tempBotIndex = 0;
 
 		// Go through every index of the serializedGameBoard stored in the string array and update the actual game board
 		for (int row = 0; row < 8; row++) {
 			for (int col = 0; col < 9; col++) {
+				// If the square is empty
 				if (serializedGameBoard[row][col].at(0) == '0') {
 					board.SetSquareVacant(row, col);
 					continue;
 				}
 
+				// If the square is occupied by computer dice
 				if (serializedGameBoard[row][col].at(0) == 'C') {
-					board.bots[botCount].SetBotControl(true);
-					board.bots[botCount].SetCaptured(false);
-					board.bots[botCount].SetCoordinates(row, col);
-					board.bots[botCount].SetTop(int(serializedGameBoard[row][col].at(1)) - int('0'));		// Subtracting ascii of 0 to get the actual number on the index
-					board.bots[botCount].SetRight(int(serializedGameBoard[row][col].at(2)) - int('0'));		// Subtracting ascii of 0 to get the actual number on the index
-					
-					if (board.bots[botCount].GetTop() == 1 && board.bots[botCount].GetRight() == 1) {
-						board.bots[botCount].SetKing(true);
+					// Check if the dice at hand is a king, and determine the index accordingly
+					if (serializedGameBoard[row][col].at(1) == '1' && serializedGameBoard[row][col].at(2) == '1') {
+						// it is a king, so assign the king index
+						tempBotIndex = 4;
+					}
+					else {
+						tempBotIndex = botCount;
 					}
 
-					board.SetSquareOccupied(row, col, board.bots[botCount]);
+					// Setting bot properties
+					board.bots[tempBotIndex].SetBotControl(true);
+					board.bots[tempBotIndex].SetCaptured(false);
+					board.bots[tempBotIndex].SetCoordinates(row, col);
+					board.bots[tempBotIndex].SetTop(int(serializedGameBoard[row][col].at(1)) - int('0'));		// Subtracting ascii of 0 to get the actual number on the index
+					board.bots[tempBotIndex].SetRight(int(serializedGameBoard[row][col].at(2)) - int('0'));		// Subtracting ascii of 0 to get the actual number on the index
+					board.bots[tempBotIndex].SetRemainingSides(board.bots[tempBotIndex].GetTop(), board.bots[tempBotIndex].GetRight());
+	
+					if (board.bots[tempBotIndex].GetTop() == 1 && board.bots[tempBotIndex].GetRight() == 1) {
+						board.bots[tempBotIndex].SetKing(true);
+					}
+
+					// setting square properties
+					board.SetSquareOccupied(row, col, board.bots[tempBotIndex]);
+					
+					// Incrementing counts
 					botCount++;
+					if (botCount == 4) { botCount++; }	// This index is reserved for the king
 				}
 
+				// If the square is occupied by human dice
 				if (serializedGameBoard[row][col].at(0) == 'H') {
-					board.humans[humanCount].SetBotControl(false);
-					board.humans[humanCount].SetCaptured(false);
-					board.humans[humanCount].SetCoordinates(row, col);
-					board.humans[humanCount].SetTop(int(serializedGameBoard[row][col].at(1)) - int('0'));	// Subtracting ascii of 0 to get the actual number on the index
-					board.humans[humanCount].SetRight(int(serializedGameBoard[row][col].at(2)) - int('0')); // Subtracting ascii of 0 to get the actual number on the index
-
-					if (board.humans[humanCount].GetTop() == 1 && board.humans[humanCount].GetRight() == 1) {
-						board.humans[humanCount].SetKing(true);
+					// Check if the dice at hand is a king, and determine the index accordingly
+					if (serializedGameBoard[row][col].at(1) == '1' && serializedGameBoard[row][col].at(2) == '1') {
+						// it is a king, so assign the king index
+						tempHumanIndex = 4;
+					}
+					else {
+						tempHumanIndex = botCount;
 					}
 
-					board.SetSquareOccupied(row, col, board.humans[humanCount]);
+					// Setting human properties
+					board.humans[tempHumanIndex].SetBotControl(false);
+					board.humans[tempHumanIndex].SetCaptured(false);
+					board.humans[tempHumanIndex].SetCoordinates(row, col);
+					board.humans[tempHumanIndex].SetTop(int(serializedGameBoard[row][col].at(1)) - int('0'));	// Subtracting ascii of 0 to get the actual number on the index
+					board.humans[tempHumanIndex].SetRight(int(serializedGameBoard[row][col].at(2)) - int('0')); // Subtracting ascii of 0 to get the actual number on the index
+					board.humans[tempHumanIndex].SetRemainingSides(board.humans[tempHumanIndex].GetTop(), board.humans[tempHumanIndex].GetRight());
+
+					if (board.humans[tempHumanIndex].GetTop() == 1 && board.humans[tempHumanIndex].GetRight() == 1) {
+						board.humans[tempHumanIndex].SetKing(true);
+					}
+
+					// setting square properties
+					board.SetSquareOccupied(row, col, board.humans[tempHumanIndex]);
+					
+					// incrementing counts
 					humanCount++;
+					if (humanCount == 4) { humanCount++; }	// This index is reserved for the king
 				}
 			}
 		}
+
+		// The dices not found are definitely captured, so set the flags
 		while (botCount != 9) {
 			board.bots[botCount].SetCaptured(true);
 			botCount++;
