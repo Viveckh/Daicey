@@ -122,9 +122,9 @@ private:
 		// Go through every index of the serializedGameBoard stored in the string array and update the actual game board
 		for (int row = 0; row < 8; row++) {
 			for (int col = 0; col < 9; col++) {
+				board.SetSquareVacant(row, col);
 				// If the square is empty
 				if (serializedGameBoard[row][col].at(0) == '0') {
-					board.SetSquareVacant(row, col);
 					continue;
 				}
 
@@ -153,10 +153,12 @@ private:
 
 					// setting square properties
 					board.SetSquareOccupied(row, col, board.bots[tempBotIndex]);
-					
+					cout << "C" << board.bots[tempBotIndex].GetTop() << board.bots[tempBotIndex].GetRight() << endl;
+
 					// Incrementing counts
-					botCount++;
+					if (tempBotIndex != 4) { botCount++; }
 					if (botCount == 4) { botCount++; }	// This index is reserved for the king
+					continue;
 				}
 
 				// If the square is occupied by human dice
@@ -184,10 +186,12 @@ private:
 
 					// setting square properties
 					board.SetSquareOccupied(row, col, board.humans[tempHumanIndex]);
-					
+					cout << "H" << board.humans[tempHumanIndex].GetTop() << board.humans[tempHumanIndex].GetRight() << endl;
+
 					// incrementing counts
-					humanCount++;
+					if (tempHumanIndex != 4) { humanCount++; }
 					if (humanCount == 4) { humanCount++; }	// This index is reserved for the king
+					continue;
 				}
 			}
 		}

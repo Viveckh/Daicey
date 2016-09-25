@@ -10,6 +10,7 @@ public:
 		botScore = 0;
 		gameResult = ' ';
 		quit = false;
+		restoringGame = false;
 		temp = ' ';
 		nextPlayer = "";
 	}
@@ -17,13 +18,33 @@ public:
 
 	// Playing the tournament
 	void PlayTournament() {
+		// Ask user if they want to restore the tournament from existing file
+		notifications.Msg_RestoreFromFile();
+		DecisionToContinue();
+
+		if (temp == 'y') {
+			restoringGame = true;
+			notifications.Msg_EnterFilePath();
+			cin >> restoreFilePath;
+		}
+
 		do {
 			// Implement a fresh game
 			Game game;
 
 			// ATTENTION: Modify the board and other tournament, game objects from serialization file here if one is provided
-
-			gameResult = game.ImplementGame();
+			if (restoringGame) {
+				// Exit the game if restore failed
+				if (!serializer.ReadAFile(restoreFilePath, game.getGameBoard(), botScore, humanScore, nextPlayer)) {
+					notifications.Msg_SerializednExited("FAILED");
+					return;
+				}
+				gameResult = game.ImplementGame(restoringGame, nextPlayer);
+				restoringGame = false;
+			}
+			else {
+				gameResult = game.ImplementGame(restoringGame);
+			}
 
 			// If a player has won the game
 			if (gameResult == 'h') {
@@ -40,12 +61,7 @@ public:
 			}
 
 			notifications.Msg_WantToPlayAgain();
-			while (!(cin >> temp) || (temp != 'y' && temp != 'n')) {
-				cin.clear();
-				cin.ignore(numeric_limits<streamsize>::max(), '\n');
-				notifications.Msg_ImproperInput();
-			}
-			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			DecisionToContinue();
 
 			if (temp == 'n') {
 				quit = true;
@@ -78,6 +94,16 @@ public:
 	}
 
 private:
+	void DecisionToContinue() {
+		temp = ' ';
+		while (!(cin >> temp) || (temp != 'y' && temp != 'n')) {
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			notifications.Msg_ImproperInput();
+		}
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	}
+
 	Serializer serializer;
 
 	int humanScore;
@@ -85,6 +111,8 @@ private:
 
 	char gameResult;
 	bool quit;
+	bool restoringGame;
+	string restoreFilePath;
 
 	char temp;
 	string nextPlayer;

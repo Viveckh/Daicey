@@ -28,11 +28,25 @@ public:
 
 	// Made this function return a value in order to stop the tournament
 	// Ret value is 'h' for human winner, 'b' for bot winner, and 's' for Serialization
-	char ImplementGame() {
+	char ImplementGame(bool restoringGame, string nextPlayer = "") {
+		// Set the turns if restoring a game from saved state
+		if (restoringGame) {
+			if (nextPlayer == "Computer") {
+				botTurn = true;
+			}
+			if (nextPlayer == "Human") {
+				humanTurn = true;
+			}
+		}
+		
 		// Draw Initial Board
 		boardView.DrawBoard(board);
+		boardView.ViewNonCapturedDice(board);
 		
-		TossToBegin();
+		// Conduct a toss if the controls haven't been assigned wile restoring
+		if (!humanTurn && !botTurn) {
+			TossToBegin();
+		}
 
 		// Continue the loop until one of the king is captured, one of the key squares gets occupied or user chooses to serialize and quit
 		do {
@@ -92,7 +106,8 @@ public:
  		} while (1);
 	}
 
-	Board getGameBoard() {
+	// Returns the board as a reference. Be careful while using it
+	Board& getGameBoard() {
 		return board;
 	}
 

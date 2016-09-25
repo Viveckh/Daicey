@@ -100,6 +100,14 @@ public:
 		DrawDivider();
 	}
 
+	void Msg_RestoreFromFile() {
+		cout << "Do you want to restore the tournament from an existing file (y/n)? ";
+	}
+
+	void Msg_EnterFilePath() {
+		cout << "Enter a valid file path to restore the tournament :- ";
+	}
+
 private:
 
 };

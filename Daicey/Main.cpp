@@ -8,8 +8,10 @@
 #include "Serializer.h"
 
 int main(int argc, char *argv[]) {
-	//Tournament tournament;
-	//tournament.PlayTournament();
+	Tournament tournament;
+	tournament.PlayTournament();
+
+	/*
 	Board board;
 	int humanWins = 0;
 	int botWins = 0;
@@ -26,6 +28,8 @@ int main(int argc, char *argv[]) {
 
 	BoardView boardview;
 	boardview.DrawBoard(board);
+	*/
+	
 	/*
 	Board board;
 	BoardView boardView;
