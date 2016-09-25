@@ -10,9 +10,22 @@
 int main(int argc, char *argv[]) {
 	//Tournament tournament;
 	//tournament.PlayTournament();
-	Serializer serialize;
-	serialize.ReadAFile();
+	Board board;
+	int humanWins = 0;
+	int botWins = 0;
+	string fileName = "C:\\Duell_LastGameSerialization.txt";
+	string nextPlayer = "";
 
+
+	Serializer serialize;
+	serialize.ReadAFile(fileName, board, botWins, humanWins, nextPlayer);
+
+	cout << botWins << endl;
+	cout << humanWins << endl;
+	cout << nextPlayer << endl << endl;
+
+	BoardView boardview;
+	boardview.DrawBoard(board);
 	/*
 	Board board;
 	BoardView boardView;

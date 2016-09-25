@@ -66,6 +66,11 @@ public:
 		//cout << top << left << bottom << right << endl;
 	}
 
+	void SetRemainingSides(int top, int right) {
+		bottom = SUM_OF_OPPOSITE_SIDES - top;
+		left = SUM_OF_OPPOSITE_SIDES - right;
+	}
+
 	// Getters for the coordinates
 	int GetRow() { return row; }
 	int GetColumn() { return column; }
