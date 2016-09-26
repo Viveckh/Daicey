@@ -59,9 +59,9 @@ public:
 			for (int col = 0; col < 9; col++) {
 				//getline(lineStream, serializedGameBoard[row][col], '\t');
 				lineStream >> ws >> serializedGameBoard[row][col] >> ws;	// ws is whitespace skipper
-				cout << serializedGameBoard[row][col] << "\t";
+				//cout << serializedGameBoard[row][col] << "\t";
 			}
-			cout << endl;
+			//cout << endl;
 		}
 
 		// Reading the scores and turns
@@ -153,7 +153,7 @@ private:
 
 					// setting square properties
 					board.SetSquareOccupied(row, col, board.bots[tempBotIndex]);
-					cout << "C" << board.bots[tempBotIndex].GetTop() << board.bots[tempBotIndex].GetRight() << endl;
+					//cout << tempBotIndex << "C" << board.bots[tempBotIndex].GetTop() << board.bots[tempBotIndex].GetRight() << endl;
 
 					// Incrementing counts
 					if (tempBotIndex != 4) { botCount++; }
@@ -169,7 +169,7 @@ private:
 						tempHumanIndex = 4;
 					}
 					else {
-						tempHumanIndex = botCount;
+						tempHumanIndex = humanCount;
 					}
 
 					// Setting human properties
@@ -186,7 +186,7 @@ private:
 
 					// setting square properties
 					board.SetSquareOccupied(row, col, board.humans[tempHumanIndex]);
-					cout << "H" << board.humans[tempHumanIndex].GetTop() << board.humans[tempHumanIndex].GetRight() << endl;
+					//cout << tempHumanIndex << "H" << board.humans[tempHumanIndex].GetTop() << board.humans[tempHumanIndex].GetRight() << endl;
 
 					// incrementing counts
 					if (tempHumanIndex != 4) { humanCount++; }

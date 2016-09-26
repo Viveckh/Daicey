@@ -31,6 +31,19 @@ public:
 		this->king = king;
 	}
 
+	void DiceReset() {
+		row = 0;
+		column = 0;
+		top = 1;
+		left = 2;
+		rear = 3;
+		bottom = SUM_OF_OPPOSITE_SIDES - top;
+		right = SUM_OF_OPPOSITE_SIDES - left;
+		front = SUM_OF_OPPOSITE_SIDES - rear;
+		king = false;
+		botOperated = false;
+		captured = false;
+	}
 
 
 	void SetBeginningOrientation(int top) {

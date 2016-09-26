@@ -45,7 +45,7 @@ public:
 
 	// Print out the captured players
 	void ViewNonCapturedDice(Board &board) {
-		cout << "Captured Human indexes: ";
+		cout << "Non Captured Human indexes: ";
 		for (int i = 0; i < 9; i++) {
 			if (!board.humans[i].IsCaptured()) {
 				cout << i << " ";
@@ -53,7 +53,7 @@ public:
 		}
 		cout << endl;
 
-		cout << "Captured Bot indexes: ";
+		cout << "Non Captured Bot indexes: ";
 		for (int j = 0; j < 9; j++) {
 			if (!board.bots[j].IsCaptured()) {
 				cout << j << " ";
