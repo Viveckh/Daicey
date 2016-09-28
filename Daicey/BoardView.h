@@ -27,11 +27,13 @@ public:
 
 					if (board.GetSquareResident(row, col)->IsBotOperated()) {
 						cout << "C";
+						cout << board.GetSquareResident(row, col)->GetTop() << board.GetSquareResident(row, col)->GetLeft() << "\t";
 					}
 					else {
 						cout << "H";
+						cout << board.GetSquareResident(row, col)->GetTop() << board.GetSquareResident(row, col)->GetRight() << "\t";
 					}
-					cout << board.GetSquareResident(row, col)->GetTop() << board.GetSquareResident(row, col)->GetRight() << "\t";
+					
 				}
 				else {
 					cout << "-\t";

@@ -20,8 +20,8 @@ public:
 		for (int index = 0; index < 9; index++) {
 			//Supplying the top values since the rear value is 3 by default
 			if (!humans[index].IsKing()) {
-				humans[index].SetBeginningOrientation(startingTopValuesOfDices[index]);
-				bots[index].SetBeginningOrientation(startingTopValuesOfDices[index]);
+				humans[index].SetBeginningOrientation(startingTopValuesOfDices[index], false);
+				bots[index].SetBeginningOrientation(startingTopValuesOfDices[index], true);
 			}
 			//cout << humans[index].GetTop() << humans[index].GetLeft() << humans[index].GetBottom() << humans[index].GetRight() << endl;
 		}
@@ -69,6 +69,14 @@ public:
 
 	Square GetSquareAtLocation(int row, int col) {
 		return gameBoard[row][col];
+	}
+
+	Dice GetHumanKing() {
+		return humans[4];
+	}
+
+	Dice GetBotKing() {
+		return bots[4];
 	}
 
 	//ATTENTION: These should be private/protected but accessible from elsewhere at the same time
