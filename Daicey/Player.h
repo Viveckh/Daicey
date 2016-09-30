@@ -321,7 +321,7 @@ protected:
 					KeepRollingLaterally(*board.GetSquareResident(startRow + counterRowsTraversed, startCol), board.GetSquareAtLocation(endRow, endCol), board);
 					notifications.Msg_NatureOfPathTaken("VERTICAL & LATERAL");
 					break;
-				// First laterally, a 90 degree turn, then laterally
+				// First laterally, a 90 degree turn, then vertically
 				case 2:
 					KeepRollingLaterally(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
 					KeepRollingVertically(*board.GetSquareResident(startRow, startCol + counterColumnsTraversed), board.GetSquareAtLocation(endRow, endCol), board);
@@ -382,6 +382,10 @@ protected:
 				counterColumnsTraversed--;
 			}
 		} while (dice.GetColumn() != destination.GetColumn());
+	}
+
+	int GetPathChoice() {
+		return pathChoice;
 	}
 
 private:

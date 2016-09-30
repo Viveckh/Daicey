@@ -20,6 +20,7 @@ public:
 		}
 
 		// Writing the board first
+		writer << "Board" << endl;
 		for (int row = 7; row >= 0; row--) {
 			for (int col = 0; col < 9; col++) {
 				writer << serializedGameBoard[row][col] << '\t';
