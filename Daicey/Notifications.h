@@ -56,6 +56,10 @@ public:
 		cout << "MSG: A " << path << " path was taken to get to the destination" << endl;
 	}
 
+	void Msg_MoveDescription(int startRow, int startCol, int endRow, int endCol) {
+		cout << "ACTION: The dice in (" << startRow << ", " << startCol << ") was moved to (" << endRow << ", " << endCol << ")" << endl;
+	}
+
 	void Msg_CrashedWhileMakingTheMove() {
 		cout << "ERROR: Whoopsie Daisy! The program crashed while making the move." << endl;
 	}
@@ -70,6 +74,8 @@ public:
 		cout << "\t\t" << player << endl;
 		cout << "***************************************************************" << endl;
 	}
+
+	void Msg_NoMsg() {}
 
 	void Msg_DisplayResults(int botScore, int humanScore) {
 		cout << "***************************************************************" << endl;
@@ -117,6 +123,53 @@ public:
 		cout << "Enter a valid file path to restore the tournament :- ";
 	}
 
+	/*
+		THE FOLLOWING FUNCTIONS ARE ESPECIALLY MEANT TO GUIDE THE USER THROUGH COMPUTER'S THOUGHT PROCESS
+	*/
+
+	void BotsThink_TryingToCaptureOpponentKeys() {
+		cout << "Bots Mumbling: Trying to capture opponent's King or KeySquare..." << endl;
+	}
+
+	void BotsThink_KeyThreatDetected(string whosUnderThreat) {
+		cout << "Bots Mumbling: Imminent threat has been detected for the " << whosUnderThreat << endl;
+	}
+
+	void BotsThink_HostileOpponentCaptured(string whosUnderThreat) {
+		cout << "Bots Mumbling: That hostile opponent aiming to attack our " << whosUnderThreat << " has been captured." << endl;
+	}
+
+	void BotsThink_HostileOpponentUncapturable(string whosUnderThreat) {
+		cout << "Bots Mumbling: That hostile opponent aiming to attack " << whosUnderThreat << " couldn't be captured. Trying alternatives..." << endl;
+	}
+
+	void BotsThink_BlockingMoveMade() {
+		cout << "Bots Mumbling: A Blocking move was successfully made to obstruct the hostile opponent." << endl;
+	}
+
+	void BotsThink_BlockingMoveNotPossible() {
+		cout << "Bots Mumbling: A Blocking move wasn't possible at this time. Trying other options..." << endl;
+	}
+
+	void BotsThink_KingMoved() {
+		cout << "Bots Mumbling: The king has been moved and the threat has been averted for now." << endl;
+	}
+
+	void BotsThink_UnsafeToMoveKing() {
+		cout << "Bots Mumbling: No safe surroundings to move the king. The humans have trapped our King." << endl;
+	}
+
+	void BotsThink_TryingToCaptureOpponentDice() {
+		cout << "Bots Mumbling: Looking for any vulnerable opponent dice to capture at this point..." << endl;
+	}
+
+	void BotsThink_CapturedOpponentDice() {
+		cout << "Bots Mumbling: We captured an opponent die." << endl;
+	}
+
+	void BotsThink_SearchingOrdinaryMove() {
+		cout << "Bots Mumbling: Examining possible moves to get closer to the opoonent king/keysquare..." << endl;
+	}
 private:
 
 };

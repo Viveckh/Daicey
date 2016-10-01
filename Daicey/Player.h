@@ -45,7 +45,7 @@ protected:
 		//This capture statement will only be executed at the destination square if path checking is done beforehand
 		if (board.GetSquareResident(dice.GetRow(), dice.GetColumn()) != NULL) {
 			board.GetSquareResident(dice.GetRow(), dice.GetColumn())->SetCaptured(true);
-			notifications.Msg_CapturedAnOpponent();
+			printNotifications ? notifications.Msg_CapturedAnOpponent() : notifications.Msg_NoMsg();
 		}
 			
 		board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
@@ -68,7 +68,7 @@ protected:
 		//This capture statement will only be executed at the destination square if path checking is done beforehand
 		if (board.GetSquareResident(dice.GetRow(), dice.GetColumn()) != NULL) {
 			board.GetSquareResident(dice.GetRow(), dice.GetColumn())->SetCaptured(true);
-			notifications.Msg_CapturedAnOpponent();
+			printNotifications ? notifications.Msg_CapturedAnOpponent() : notifications.Msg_NoMsg();
 		}
 			
 		board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
@@ -91,7 +91,7 @@ protected:
 		//This capture statement will only be executed at the destination square if path checking is done beforehand
 		if (board.GetSquareResident(dice.GetRow(), dice.GetColumn()) != NULL) {
 			board.GetSquareResident(dice.GetRow(), dice.GetColumn())->SetCaptured(true);
-			notifications.Msg_CapturedAnOpponent();
+			printNotifications ? notifications.Msg_CapturedAnOpponent() : notifications.Msg_NoMsg();
 		}
 
 		board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
@@ -114,7 +114,7 @@ protected:
 		//This capture statement will only be executed at the destination square if path checking is done beforehand
 		if (board.GetSquareResident(dice.GetRow(), dice.GetColumn()) != NULL) {
 			board.GetSquareResident(dice.GetRow(), dice.GetColumn())->SetCaptured(true);
-			notifications.Msg_CapturedAnOpponent();
+			printNotifications ? notifications.Msg_CapturedAnOpponent() : notifications.Msg_NoMsg();
 		}
 
 		board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
@@ -136,11 +136,11 @@ protected:
 				return true;
 			}
 			else {
-				notifications.Msg_InvalidMove();
+				printNotifications ? notifications.Msg_InvalidMove() : notifications.Msg_NoMsg();
 			}
 		}
 		else {
-			notifications.Msg_RunningOverOwnDice();
+			printNotifications ? notifications.Msg_RunningOverOwnDice() : notifications.Msg_NoMsg();
 		}
 		return false;
 	}
@@ -187,7 +187,7 @@ protected:
 			}
 
 			//If both the path couldn't return true, then the path is invalid
-			notifications.Msg_NoValidPath();
+			printNotifications ? notifications.Msg_NoValidPath() : notifications.Msg_NoMsg();
 			return false;
 		}
 
@@ -200,7 +200,7 @@ protected:
 				return true;
 			}
 			else {
-				notifications.Msg_NoValidPath();
+				printNotifications ? notifications.Msg_NoValidPath() : notifications.Msg_NoMsg();
 				return false;
 			}
 		}
@@ -214,7 +214,7 @@ protected:
 				return true;
 			}
 			else {
-				notifications.Msg_NoValidPath();
+				printNotifications ? notifications.Msg_NoValidPath() : notifications.Msg_NoMsg();
 				return false;
 			}
 		}
@@ -309,7 +309,7 @@ protected:
 					
 					// Display a notification if the user's choice of path wasn't valid and had to be superceded by the next best route
 					if (path != pathChoice){
-						notifications.Msg_90DegreePathSelectionNotProcessed();
+						printNotifications ? notifications.Msg_90DegreePathSelectionNotProcessed() : notifications.Msg_NoMsg();
 					}
 				}
 
@@ -319,29 +319,30 @@ protected:
 				case 1:
 					KeepRollingVertically(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
 					KeepRollingLaterally(*board.GetSquareResident(startRow + counterRowsTraversed, startCol), board.GetSquareAtLocation(endRow, endCol), board);
-					notifications.Msg_NatureOfPathTaken("VERTICAL & LATERAL");
+					printNotifications ? notifications.Msg_NatureOfPathTaken("VERTICAL & LATERAL") : notifications.Msg_NoMsg();
 					break;
 				// First laterally, a 90 degree turn, then vertically
 				case 2:
 					KeepRollingLaterally(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
 					KeepRollingVertically(*board.GetSquareResident(startRow, startCol + counterColumnsTraversed), board.GetSquareAtLocation(endRow, endCol), board);
-					notifications.Msg_NatureOfPathTaken("LATERAL & VERTICAL");
+					printNotifications ? notifications.Msg_NatureOfPathTaken("LATERAL & VERTICAL") : notifications.Msg_NoMsg();
 					break;
 				// Vertically only
 				case 3:
 					KeepRollingVertically(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
-					notifications.Msg_NatureOfPathTaken("VERTICAL");
+					printNotifications ? notifications.Msg_NatureOfPathTaken("VERTICAL") : notifications.Msg_NoMsg();
 					break;
 				// Laterally only
 				case 4:
 					KeepRollingLaterally(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
-					notifications.Msg_NatureOfPathTaken("LATERAL");
+					printNotifications ? notifications.Msg_NatureOfPathTaken("LATERAL") : notifications.Msg_NoMsg();
 					break;
 				default:
 					//ATTENTION: LOG ERROR SAYING THE PATH DESTINATION COULDN'T BE SET FOR SOME REASON
-					notifications.Msg_CrashedWhileMakingTheMove();
-					break;
+					printNotifications ? notifications.Msg_CrashedWhileMakingTheMove() : notifications.Msg_NoMsg();
+					return false;
 				}
+				notifications.Msg_MoveDescription(startRow + 1, startCol + 1, endRow + 1, endCol + 1);	// +1 To compensate for 1 offset in the array indexes
 				return true;
 			}
 		}
@@ -387,6 +388,9 @@ protected:
 	int GetPathChoice() {
 		return pathChoice;
 	}
+
+protected:
+	static bool printNotifications;
 
 private:
 	int pathChoice;	// Choice of what type of path to take out of available four types

@@ -9,6 +9,7 @@ public:
 
 	// ATTENTION: Validate the input
 	bool Play(int startRow, int startCol, int endRow, int endCol, Board &board, int path = 0) {
+		printNotifications = true;
 		
 		if (IndexOutOfBounds(startRow, startCol, endRow, endCol)) {
 			// Log error here

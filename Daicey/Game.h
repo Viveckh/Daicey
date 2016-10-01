@@ -41,7 +41,6 @@ public:
 		
 		// Draw Initial Board
 		boardView.DrawBoard(board);
-		boardView.ViewNonCapturedDice(board);
 		
 		// Conduct a toss if the controls haven't been assigned wile restoring
 		if (!humanTurn && !botTurn) {
@@ -52,6 +51,7 @@ public:
 		do {
 			// If it is Computer's turn
 			if (botTurn) {
+				notifications.Msg_Turns("COMPUTER'S TURN");
 				if (bot.Play(board)) {
 					//Transfer Control
 					botTurn = false;
@@ -60,14 +60,13 @@ public:
 					goto ReloadGameBoard;	//Using Goto to prevent human's loop from running
 				}
 				else {
-					notifications.Msg_InvalidMove();
 					continue;
 				}
 			}
 			
 			// If it is human's turn
 			if (humanTurn) {
-
+				notifications.Msg_Turns("YOUR TURN");
 				GetUserInput();
 				if (human.Play(startRow, startCol, endRow, endCol, board, path)) {
 					humanTurn = false;
