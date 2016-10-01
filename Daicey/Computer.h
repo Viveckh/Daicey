@@ -17,27 +17,27 @@ public:
 
 		// STEP 1: Check if the opponent's king or key square can be captured. If yes, go for it!
 		for (index = 0; index < TEAMSIZE; index++) {
-			if (!calculationBoard.bots[index].IsCaptured()) {
-				// Try to capture the king die
-				if (MakeAMove(calculationBoard.bots[index].GetRow(), calculationBoard.bots[index].GetColumn(), humanKingSquare.GetRow(), humanKingSquare.GetColumn(), board, 0)) {
-					return true;
-				}
-				// Try to capture the key square
-				if (MakeAMove(calculationBoard.bots[index].GetRow(), calculationBoard.bots[index].GetColumn(), humanKeySquare.GetRow(), humanKeySquare.GetColumn(), board, 0)) {
-					return true;
-				}
-			}
+if (!calculationBoard.bots[index].IsCaptured()) {
+	// Try to capture the king die
+	if (MakeAMove(calculationBoard.bots[index].GetRow(), calculationBoard.bots[index].GetColumn(), humanKingSquare.GetRow(), humanKingSquare.GetColumn(), board, 0)) {
+		return true;
+	}
+	// Try to capture the key square
+	if (MakeAMove(calculationBoard.bots[index].GetRow(), calculationBoard.bots[index].GetColumn(), humanKeySquare.GetRow(), humanKeySquare.GetColumn(), board, 0)) {
+		return true;
+	}
+}
 		}
-		
+
 		// STEP 2: Check if own king or keysquare is under potential attack. If yes, Save Em'
 		for (index = 0; index < TEAMSIZE; index++) {
 			if (!calculationBoard.humans[index].IsCaptured()) {
 				// ATTENTION: If both kingSquare and KeySquare are under threat, then blocking is the best way to go about it
-				
+
 				//Check if KingSquare is under imminent threat
 				if (IsValidDestination(calculationBoard.humans[index], botKingSquare)) {
 					if (IsPathValid(calculationBoard.humans[index], botKingSquare, calculationBoard)) {
-						
+
 						// First, Try capturing the hostile opponent
 						if (TryCapturingTheHostileOpponent(calculationBoard.humans[index], board)) {
 							cout << "Computer just captured that hostile human opponent aiming to attack the king" << endl;
@@ -55,7 +55,7 @@ public:
 						else {
 							cout << "Any Blocking move wasn't possible at this time" << endl;
 						}
-						
+
 
 						// Third, Try moving the king as a last resort and make sure the new position is safe
 						if (TryMovingKing(botKingSquare, board)) {
@@ -105,9 +105,51 @@ public:
 			}
 		}
 
+		// STEP 4: Go through the remaining possibilities and move a die with intentions of getting it closer to the king or key square.
 
+		// Variables to store the best combination of origin and destination co-ordinates for a move, and also the minDistance that has been attained.
+		tuple<int, int, int, int> moveCoordinates = make_tuple(0, 0, 0, 0);
+		int minDistance = 99;
+		int distanceFromFinalDestination = 99;
+
+		//For each of the die, go through every square in the gameboard and find the most optimal square to move in current state
+		for (index = 0; index < TEAMSIZE; index++) {
+			if (!calculationBoard.bots[index].IsKing() && !calculationBoard.bots[index].IsCaptured()) {						// For every uncaptured soldier die
+				for (int row = 0; row < 8; row++) {																			// Go through the entire board and
+					for (int col = 0; col < 9; col++) {																			
+						if (IsValidDestination(calculationBoard.bots[index], calculationBoard.GetSquareAtLocation(row, col))) {			// Check if valid dest
+							if (IsPathValid(calculationBoard.bots[index], calculationBoard.GetSquareAtLocation(row, col), board)) {		// Check if valid path
+								if (!IsInDanger(board.GetSquareAtLocation(row, col), board)) {											// Check if safe
+									// Compare distance to get to the king square from new location
+									distanceFromFinalDestination = abs(humanKingSquare.GetRow() - row) + abs(humanKingSquare.GetColumn() - col);	
+									if (distanceFromFinalDestination < minDistance) {													// Check if distance to key becomes minimum & then assign
+										minDistance = distanceFromFinalDestination;
+										moveCoordinates = make_tuple(calculationBoard.bots[index].GetRow(), calculationBoard.bots[index].GetColumn(), row, col);	// In order: startRow, startCol, endRow, endCol
+									}
+
+									//Compare distance to get to the key square from new location
+									distanceFromFinalDestination = abs(humanKeySquare.GetRow() - row) + abs(humanKeySquare.GetColumn() - col);
+									if (distanceFromFinalDestination < minDistance) {													// Check if distance to key becomes minimum & then assign
+										minDistance = distanceFromFinalDestination;
+										moveCoordinates = make_tuple(calculationBoard.bots[index].GetRow(), calculationBoard.bots[index].GetColumn(), row, col);	// In order: startRow, startCol, endRow, endCol
+									}
+								}
+							}
+						}
+					}
+				}
+			
+			}
+		}
+
+		// If a better path was found from the above intensive checking
+		if (minDistance < 99) {
+			if (MakeAMove(get<0>(moveCoordinates), get<1>(moveCoordinates), get<2>(moveCoordinates), get<3>(moveCoordinates), board, 0)) {
+				cout << "Saw no need to make a defensive move, so an ordinary move" << endl;
+				return true;
+			}
+		}
 		return true;
-		// Calculate all the possibilities and make a move
 	}
 
 private:
@@ -126,20 +168,20 @@ private:
 		case 1:
 			if (FindBlockPointVertically(hostileDice, squareToProtect, board)) return true;
 			if (FindBlockPointLaterally(hostileDice, squareToProtect, board)) return true;
-		
+			break;
 		// First laterally, a 90 degree turn, then vertically
 		case 2:
 			if (FindBlockPointLaterally(hostileDice, squareToProtect, board)) return true;
 			if (FindBlockPointVertically(hostileDice, squareToProtect, board)) return true;
-			
+			break;
 		// Vertically only
 		case 3:
-			if (FindBlockPointLaterally(hostileDice, squareToProtect, board)) return true;
-
+			if (FindBlockPointVertically(hostileDice, squareToProtect, board)) return true;
+			break;
 		// laterally only
 		case 4:
 			if (FindBlockPointLaterally(hostileDice, squareToProtect, board)) return true;
-
+			break;
 		default:
 			break;
 		}
