@@ -145,11 +145,14 @@ private:
 					board.bots[tempBotIndex].SetCaptured(false);
 					board.bots[tempBotIndex].SetCoordinates(row, col);
 					board.bots[tempBotIndex].SetTop(int(serializedGameBoard[row][col].at(1)) - int('0'));		// Subtracting ascii of 0 to get the actual number on the index
-					board.bots[tempBotIndex].SetRight(int(serializedGameBoard[row][col].at(2)) - int('0'));		// Subtracting ascii of 0 to get the actual number on the index
-					board.bots[tempBotIndex].SetRemainingSides(board.bots[tempBotIndex].GetTop(), board.bots[tempBotIndex].GetRight());
+					board.bots[tempBotIndex].SetLeft(int(serializedGameBoard[row][col].at(2)) - int('0'));		// Setting left, because computer's left is actually board's right. Subtracting ascii of 0 to get the actual number on the index
+					
 	
-					if (board.bots[tempBotIndex].GetTop() == 1 && board.bots[tempBotIndex].GetRight() == 1) {
+					if (board.bots[tempBotIndex].GetTop() == 1 && board.bots[tempBotIndex].GetLeft() == 1) {
 						board.bots[tempBotIndex].SetKing(true);
+					}
+					else {
+						board.bots[tempBotIndex].SetRemainingSides(board.bots[tempBotIndex].GetTop(), board.bots[tempBotIndex].GetLeft());
 					}
 
 					// setting square properties
@@ -179,10 +182,13 @@ private:
 					board.humans[tempHumanIndex].SetCoordinates(row, col);
 					board.humans[tempHumanIndex].SetTop(int(serializedGameBoard[row][col].at(1)) - int('0'));	// Subtracting ascii of 0 to get the actual number on the index
 					board.humans[tempHumanIndex].SetRight(int(serializedGameBoard[row][col].at(2)) - int('0')); // Subtracting ascii of 0 to get the actual number on the index
-					board.humans[tempHumanIndex].SetRemainingSides(board.humans[tempHumanIndex].GetTop(), board.humans[tempHumanIndex].GetRight());
+					
 
 					if (board.humans[tempHumanIndex].GetTop() == 1 && board.humans[tempHumanIndex].GetRight() == 1) {
 						board.humans[tempHumanIndex].SetKing(true);
+					}
+					else {
+						board.humans[tempHumanIndex].SetRemainingSides(board.humans[tempHumanIndex].GetTop(), board.humans[tempHumanIndex].GetRight());
 					}
 
 					// setting square properties
@@ -199,11 +205,11 @@ private:
 
 		// The dices not found are definitely captured, so set the flags
 		while (botCount != 9) {
-			board.bots[botCount].SetCaptured(true);
+			if (botCount != 4) board.bots[botCount].SetCaptured(true);
 			botCount++;
 		}
 		while (humanCount != 9) {
-			board.humans[humanCount].SetCaptured(true);
+			if (humanCount != 4) board.humans[humanCount].SetCaptured(true);
 			humanCount++;
 		}
 	}
@@ -216,13 +222,17 @@ private:
 				if (board.IsSquareOccupied(row, col)) {
 					if (board.GetSquareResident(row, col)->IsBotOperated()) {
 						serializedGameBoard[row][col].assign("C");
+						// Append the top and right value of the occupying dice
+						serializedGameBoard[row][col].append(to_string(board.GetSquareResident(row, col)->GetTop()));
+						serializedGameBoard[row][col].append(to_string(board.GetSquareResident(row, col)->GetLeft()));
 					}
 					else {
 						serializedGameBoard[row][col].assign("H");
+						// Append the top and right value of the occupying dice
+						serializedGameBoard[row][col].append(to_string(board.GetSquareResident(row, col)->GetTop()));
+						serializedGameBoard[row][col].append(to_string(board.GetSquareResident(row, col)->GetRight()));
 					}
-					// Append the top and right value of the occupying dice
-					serializedGameBoard[row][col].append(to_string(board.GetSquareResident(row, col)->GetTop()));
-					serializedGameBoard[row][col].append(to_string(board.GetSquareResident(row, col)->GetRight()));
+					
 				}
 				//cout << serializedGameBoard[row][col] << "\t";
 			}

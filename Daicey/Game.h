@@ -41,6 +41,7 @@ public:
 		
 		// Draw Initial Board
 		boardView.DrawBoard(board);
+		boardView.ViewNonCapturedDice(board);
 		
 		// Conduct a toss if the controls haven't been assigned wile restoring
 		if (!humanTurn && !botTurn) {

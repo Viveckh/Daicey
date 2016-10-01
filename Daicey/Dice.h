@@ -54,26 +54,26 @@ public:
 		
 		// Searching through the counter clockwise dice pattern to find the top value
 		for (int index = 0; index < 4; index++) {
-			if (counterClockwiseDiceOrder[index] == top) {
+			if (counterClockwiseDiceOrder1[index] == top) {
 				// If index has the top value, index+1 will have the left value for human, and right value for a bot
 				if (index <= 2) {
 					if (isBot) {
-						right = counterClockwiseDiceOrder[index + 1];
+						right = counterClockwiseDiceOrder1[index + 1];
 						left = SUM_OF_OPPOSITE_SIDES - right;
 					}
 					else {
-						left = counterClockwiseDiceOrder[index + 1];
+						left = counterClockwiseDiceOrder1[index + 1];
 						right = SUM_OF_OPPOSITE_SIDES - left;
 					}
 				}
 				else {
 					// If the last index has the matching top value, then the first index would have the left value for human, and right value for a bot
 					if (isBot) {
-						right = counterClockwiseDiceOrder[0];
+						right = counterClockwiseDiceOrder1[0];
 						left = SUM_OF_OPPOSITE_SIDES - right;
 					}
 					else {
-						left = counterClockwiseDiceOrder[0];
+						left = counterClockwiseDiceOrder1[0];
 						right = SUM_OF_OPPOSITE_SIDES - left;
 					}
 				}
@@ -83,9 +83,65 @@ public:
 		//cout << top << left << bottom << right << endl;
 	}
 
-	void SetRemainingSides(int top, int right) {
-		bottom = SUM_OF_OPPOSITE_SIDES - top;
-		left = SUM_OF_OPPOSITE_SIDES - right;
+	// The first parameter is the top, the second one can either be left (for computer) or right (for human)
+	void SetRemainingSides(int arg1, int arg2) {
+		bottom = SUM_OF_OPPOSITE_SIDES - arg1;
+		
+		// for computer the given arg2 is left whereas for human the given arg2 is right value
+		if (IsBotOperated()) {
+			right = SUM_OF_OPPOSITE_SIDES - arg2;
+		}
+		else {
+			left = SUM_OF_OPPOSITE_SIDES - arg2;
+		}
+		
+		front = rear = 0;	//resetting before calculating new one
+
+		// From this point, it doesn't matter whether it is human or computer die because both are saved in the model in the same way
+		// above we had to be careful to meet our model's specs because the computer's right given in the serialization file is actually left in our overall board model
+		for (int index = 0; index < 7; index++) {
+			if (counterClockwiseDiceOrder1[index] == top && counterClockwiseDiceOrder1[index + 1] == right) {
+				// take higher out of the remaining two not in the array as the rear value
+				rear = 4;
+				front = SUM_OF_OPPOSITE_SIDES - rear;
+				break;
+			}
+
+			if (counterClockwiseDiceOrder1[index] == right && counterClockwiseDiceOrder1[index + 1] == top) {
+				// take lower out of the remaining two not in the array as the rear value
+				rear = 3;
+				front = SUM_OF_OPPOSITE_SIDES - rear;
+				break;
+			}
+
+			if (counterClockwiseDiceOrder2[index] == top && counterClockwiseDiceOrder2[index + 1] == right) {
+				// take higher out of the remaining two not in the array as the rear value
+				rear = 5;
+				front = SUM_OF_OPPOSITE_SIDES - rear;
+				break;
+			}
+
+			if (counterClockwiseDiceOrder2[index] == right && counterClockwiseDiceOrder2[index + 1] == top) {
+				// take lower out of the remaining two not in the array as the rear value
+				rear = 2;
+				front = SUM_OF_OPPOSITE_SIDES - rear;
+				break;
+			}
+
+			if (counterClockwiseDiceOrder3[index] == top && counterClockwiseDiceOrder3[index + 1] == right) {
+				// take higher out of the remaining two not in the array as the rear value
+				rear = 6;
+				front = SUM_OF_OPPOSITE_SIDES - rear;
+				break;
+			}
+
+			if (counterClockwiseDiceOrder3[index] == right && counterClockwiseDiceOrder3[index + 1] == top) {
+				// take lower out of the remaining two not in the array as the rear value
+				rear = 1;
+				front = SUM_OF_OPPOSITE_SIDES - rear;
+				break;
+			}
+		}
 	}
 
 	// Getters for the coordinates
@@ -186,6 +242,8 @@ private:
 	int left;
 	int right;
 
-	int counterClockwiseDiceOrder[4] = { 1, 2, 6, 5 };
+	int counterClockwiseDiceOrder1[8] = { 1, 2, 6, 5, 1, 2, 6, 5 };
+	int counterClockwiseDiceOrder2[8] = { 3, 1, 4, 6, 3, 1, 4, 6 };
+	int counterClockwiseDiceOrder3[8] = { 2, 3, 5, 4, 2, 3, 5, 4 };
 	const int SUM_OF_OPPOSITE_SIDES = 7;
 };
