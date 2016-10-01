@@ -9,22 +9,18 @@
 class Board {
 
 public:
-	// Default Constructor
+	// VARIABLES
+	// ATTENTION: These arrays should be private/protected but accessible from elsewhere at the same time
+	Dice humans[9];
+	Dice bots[9];
+
+	// DEFAULT CONSTRUCTOR
 	Board();
 
+	// SELECTORS
 	// Checks if a square in the gameboard is occupied with dice
 	bool IsSquareOccupied(int row, int col) {
 		return gameBoard[row][col].IsOccupied();
-	}
-
-	// Sets the given square in the gameboard as occupied with the given dice
-	void SetSquareOccupied(int row, int col, Dice &dice) {
-		return gameBoard[row][col].SetOccupied(dice);
-	}
-
-	// Sets a square vacant from any dice occupancies
-	void SetSquareVacant(int row, int col) {
-		return gameBoard[row][col].SetVacant();
 	}
 
 	// Gets the pointer to the resident die in the square
@@ -47,9 +43,12 @@ public:
 		return bots[4];
 	}
 
-	//ATTENTION: These arrays should be private/protected but accessible from elsewhere at the same time
-	Dice humans[9];
-	Dice bots[9];
+	// MUTATORS
+	// Sets the given square in the gameboard as occupied with the given dice
+	void SetSquareOccupied(int row, int col, Dice &dice);
+
+	// Sets a square vacant from any dice occupancies
+	void SetSquareVacant(int row, int col);
 
 private:
 	Square gameBoard[8][9];		// The gameboard Array

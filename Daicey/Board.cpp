@@ -41,3 +41,13 @@ Board::Board() {
 		//cout << endl;
 	}
 }
+
+// Sets the given square in the gameboard as occupied with the given dice
+void Board::SetSquareOccupied(int row, int col, Dice &dice) {
+	return gameBoard[row][col].SetOccupied(dice);
+}
+
+// Sets a square vacant from any dice occupancies
+void Board::SetSquareVacant(int row, int col) {
+	return gameBoard[row][col].SetVacant();
+}

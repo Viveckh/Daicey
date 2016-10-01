@@ -133,7 +133,6 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Human.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Notifications.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Serializer.cpp" />
     <ClCompile Include="Square.cpp" />

@@ -6,21 +6,24 @@
 #include "Dice.h"
 
 class Square {
-
 public:
 	// Default Constructor
-	Square() {
-		row = NULL;
-		column = NULL;
-		resident = NULL;
-	}
+	Square();
 
 	// Constructor
-	Square(int row, int column) {
-		this->row = row;
-		this->column = column;
-	}
+	Square(int row, int column);
 
+	//ACCESSORS
+	// Gets the row of the square in a board
+	int GetRow() { return row; }
+
+	// Gets the column of the square in a board
+	int GetColumn() { return column; }
+
+	// Gets the pointer to resident die
+	Dice * GetResident() {
+		return resident;
+	}
 
 	// Checks whether the square is occupied by a gameobject
 	bool IsOccupied() {
@@ -31,30 +34,19 @@ public:
 			return false;
 		}
 	}
+	
+	// MUTATORS
+	// Sets coordinates of the square in a board
+	void SetCoordinates(int row, int column);
 
-	// Sets the occupancy status of the square
-	void SetOccupied(Dice &dice) {
-		resident = &dice;
-	}
+	// Sets the given dice as a resident of the square
+	void SetOccupied(Dice &dice);
 
-	Dice * GetResident() {
-		return resident;
-	}
-
-	// Clears the occupancy
-	void SetVacant() {
-		resident = NULL;
-	}
-
-	void SetCoordinates(int row, int column) {
-		this->row = row;
-		this->column = column;
-	}
-
-	int GetRow() { return row; }
-	int GetColumn() { return column; }
+	// Clears the occupancy in the square
+	void SetVacant();
 
 private:
+	// VARIABLE DECLARATIONS
 	// Coordinates of the square within the game board
 	int row;
 	int column;
