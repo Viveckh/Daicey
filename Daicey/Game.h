@@ -1,6 +1,14 @@
 //
-//Implements the game
+// Game Class
+// Implements the necessary details to run a game like conducting initial toss, getting user input for moves, displaying updated game board and turn notifications.
 //
+
+/*	************************************************************
+* Name:			Vivek Pandey								*
+* Project:		Duell C++									*
+* Class:		CMPS 366									*
+* Date:			10/4/2016									*
+************************************************************ */
 
 #pragma once
 
@@ -22,6 +30,7 @@ public:
 	}
 
 	// OTHER FUNCTIONS
+
 	// Implements a Round. Return value is 'h' for human winner, 'b' for bot winner, and 's' for Serialization
 	char ImplementGame(bool restoringGame, string nextPlayer = "");
 
@@ -50,7 +59,9 @@ private:
 	int startCol;
 	int endRow;
 	int endCol;
-	int path;		//1 for vertical first, 2 for lateral first
+
+	//1 for vertical first, 2 for lateral first
+	int path;
 	string wishToSerialize;
 
 	// UTILITY FUNCTIONS

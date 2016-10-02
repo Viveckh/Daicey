@@ -1,6 +1,14 @@
 //
-// Square - Properties and contents of a square in the game Board
+// Square
+// Stores and maintains the location and occupancy status of a square in the game board. A square can be occupied by a dice object only.
 //
+
+/*	************************************************************
+* Name:			Vivek Pandey								*
+* Project:		Duell C++									*
+* Class:		CMPS 366									*
+* Date:			10/4/2016									*
+************************************************************ */
 
 #pragma once
 #include "Dice.h"
@@ -14,6 +22,7 @@ public:
 	Square(int row, int column);
 
 	//ACCESSORS
+
 	// Gets the row of the square in a board
 	int GetRow() { return row; }
 
@@ -47,6 +56,7 @@ public:
 
 private:
 	// VARIABLE DECLARATIONS
+
 	// Coordinates of the square within the game board
 	int row;
 	int column;

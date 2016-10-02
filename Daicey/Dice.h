@@ -1,6 +1,16 @@
 //
-// Dice Class- Properties of a dice in the gameboard
+// Dice Class
+// Implements the properties of a dice object used in the game. 
+// The class consists of variables and functions to store and modify a dice’s face values, its coordinates within a game board, 
+// its controller (human or computer), its capture status, and whether it is a king. 
 //
+
+/*	************************************************************
+* Name:			Vivek Pandey								*
+* Project:		Duell C++									*
+* Class:		CMPS 366									*
+* Date:			10/4/2016									*
+************************************************************ */
 
 #pragma once
 #include "stdafx.h"
@@ -16,6 +26,7 @@ public:
 	Dice(int row, int column, bool king);
 
 	// ACCESSORS
+
 	// Getters for the coordinates
 	int GetRow() { return row; }
 	int GetColumn() { return column; }

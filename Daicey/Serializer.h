@@ -1,6 +1,15 @@
 //
-//	Serializes to file & reads serialized file to restore game
+// Class Serializer
+// Contains necessary member functions to serialize or restore a tournament to and from a text file.
 //
+
+/*	************************************************************
+* Name:			Vivek Pandey								*
+* Project:		Duell C++									*
+* Class:		CMPS 366									*
+* Date:			10/4/2016									*
+************************************************************ */
+
 
 #pragma once
 #include "stdafx.h"

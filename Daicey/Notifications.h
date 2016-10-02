@@ -1,6 +1,14 @@
 //
-//	Displays error msgs, notifications, prompts of the game
+// Class Notifications
+// Consists of a list of inline functions to display various error messages and notifications to the console. 
 //
+
+/*	************************************************************
+* Name:			Vivek Pandey								*
+* Project:		Duell C++									*
+* Class:		CMPS 366									*
+* Date:			10/4/2016									*
+************************************************************ */
 
 #pragma once
 #include "stdafx.h"

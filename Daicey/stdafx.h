@@ -1,14 +1,23 @@
 //
-// stdafx.h : include file for standard system include files,
+// stdafx.h 
+// include file for standard system include files,
 // or project specific include files that are used frequently, but
 // are changed infrequently
 //
+
+/*	************************************************************
+* Name:			Vivek Pandey								*
+* Project:		Duell C++									*
+* Class:		CMPS 366									*
+* Date:			10/4/2016									*
+************************************************************ */
 
 #pragma once
 
 #include "targetver.h"
 
-#define WIN32_LEAN_AND_MEAN		// Excludes rarely-used stuff from Windows headers
+// Excludes rarely-used stuff from Windows headers
+#define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <stdio.h>
 #include <tchar.h>

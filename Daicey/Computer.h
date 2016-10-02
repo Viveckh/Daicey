@@ -1,3 +1,15 @@
+//
+// Computer Class
+// Implements Computer strategies to evaluate, prioritize, select and initiate the best move on behalf of the computer.
+//
+
+/*	************************************************************
+* Name:			Vivek Pandey								*
+* Project:		Duell C++									*
+* Class:		CMPS 366									*
+* Date:			10/4/2016									*
+************************************************************ */
+
 #pragma once
 #include "Player.h"
 
@@ -17,6 +29,7 @@ private:
 	Notifications notifications;
 
 	// UTILITY FUNCTIONS
+
 	// Attempts to block the path of an opponent who is a potential threat
 	bool TryBlockingAttack(Dice hostileDice, Square squareToProtect, Board &board);
 

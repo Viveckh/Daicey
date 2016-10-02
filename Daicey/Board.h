@@ -1,6 +1,15 @@
 //
-// Board - The properties and state of a game board
+// Board Class
+// Initializes and maintains a game board of squares and player dices. 
+// It consists of functions to initialize a board, retrieve the contents at different squares within the board, check and set the occupancy of these squares that comprise the game board.
 //
+
+/*	************************************************************
+     * Name:		Vivek Pandey								*
+     * Project:		Duell C++									*
+     * Class:		CMPS 366									*
+     * Date:		10/4/2016									*
+     ************************************************************ */
 
 #pragma once
 #include "Square.h"
@@ -51,6 +60,9 @@ public:
 	void SetSquareVacant(int row, int col);
 
 private:
-	Square gameBoard[8][9];		// The gameboard Array
-	int startingTopValuesOfDices[9] = { 5, 1, 2, 6, 1, 6, 2, 1, 5 };	// Top values of dice at home row
+	// The gameboard Array
+	Square gameBoard[8][9];
+
+	// Top values of dice at home row
+	int startingTopValuesOfDices[9] = { 5, 1, 2, 6, 1, 6, 2, 1, 5 };
 };

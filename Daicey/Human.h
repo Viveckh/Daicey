@@ -1,6 +1,14 @@
 //
-// Listens & acts in accordance to the move request made by human player
+// Class Human
+// Handles the move requests from a human player by performing input validations and processing them to reflect changes in the game board.
 //
+
+/*	************************************************************
+* Name:			Vivek Pandey								*
+* Project:		Duell C++									*
+* Class:		CMPS 366									*
+* Date:			10/4/2016									*
+************************************************************ */
 
 #pragma once
 #include "Player.h"

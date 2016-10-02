@@ -1,6 +1,15 @@
 //
-//  Player - Typical Actions of a Game Player & validity checks
+// Player Class
+// Implements the basic set of strategies for any player like traversing the board and determining path choices, validating and processing moves, 
+// changing dice orientation based on the rolls, capturing and eliminating opponent dices.
 //
+
+/*	************************************************************
+* Name:			Vivek Pandey								*
+* Project:		Duell C++									*
+* Class:		CMPS 366									*
+* Date:			10/4/2016									*
+************************************************************ */
 
 #pragma once
 #include "Board.h"
@@ -68,7 +77,8 @@ protected:
 	void KeepRollingLaterally(Dice &dice, Square &destination, Board &board);
 
 protected:
-	static bool printNotifications;	// static variable to toggle notifications print on and off
+	// static variable to toggle notifications print on and off
+	static bool printNotifications;
 
 private:
 	// VARIABLES & OBJECTS DECLARATIONS
