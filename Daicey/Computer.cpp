@@ -19,13 +19,16 @@ bool Computer::Play(Board &board) {
 			if (MakeAMove(calculationBoard.bots[index].GetRow(), calculationBoard.bots[index].GetColumn(), humanKingSquare.GetRow(), humanKingSquare.GetColumn(), board, 0)) {
 				return true;
 			}
-			// Try to capture the key square
-			if (MakeAMove(calculationBoard.bots[index].GetRow(), calculationBoard.bots[index].GetColumn(), humanKeySquare.GetRow(), humanKeySquare.GetColumn(), board, 0)) {
-				return true;
+			// Try to capture the key square by the king die
+			if (calculationBoard.bots[index].IsKing()) {
+				if (MakeAMove(calculationBoard.bots[index].GetRow(), calculationBoard.bots[index].GetColumn(), humanKeySquare.GetRow(), humanKeySquare.GetColumn(), board, 0)) {
+					return true;
+				}
 			}
 		}
 	}
 
+	notifications.BotsThink_CheckingKingNKeySquareSafety();
 	// STEP 2: Check if own king or keysquare is under potential attack. If yes, Save Em'
 	for (index = 0; index < TEAMSIZE; index++) {
 		if (!calculationBoard.humans[index].IsCaptured()) {
@@ -67,26 +70,28 @@ bool Computer::Play(Board &board) {
 				}
 			}
 
-			//Check if KeySquare is under imminent threat
-			if (IsValidDestination(calculationBoard.humans[index], botKeySquare)) {
-				if (IsPathValid(calculationBoard.humans[index], botKeySquare, calculationBoard)) {
-					notifications.BotsThink_KeyThreatDetected("KeySquare");
-					// First, Try capturing the hostile opponent
-					if (TryCapturingTheHostileOpponent(calculationBoard.humans[index], board)) {
-						notifications.BotsThink_HostileOpponentCaptured("KeySquare");
-						return true;
-					}
-					else {
-						notifications.BotsThink_HostileOpponentUncapturable("KeySquare");
-					}
+			// Check if KeySquare is under imminent threat by opponent's king dice
+			if (calculationBoard.humans[index].IsKing()) {
+				if (IsValidDestination(calculationBoard.humans[index], botKeySquare)) {
+					if (IsPathValid(calculationBoard.humans[index], botKeySquare, calculationBoard)) {
+						notifications.BotsThink_KeyThreatDetected("KeySquare");
+						// First, Try capturing the hostile opponent (though capturing the opponent king has already been attempted above)
+						if (TryCapturingTheHostileOpponent(calculationBoard.humans[index], board)) {
+							notifications.BotsThink_HostileOpponentCaptured("KeySquare");
+							return true;
+						}
+						else {
+							notifications.BotsThink_HostileOpponentUncapturable("KeySquare");
+						}
 
-					// Second, Try blocking the hostile opponent
-					if (TryBlockingAttack(calculationBoard.humans[index], botKeySquare, board)) {
-						notifications.BotsThink_BlockingMoveMade();
-						return true;
-					}
-					else {
-						notifications.BotsThink_BlockingMoveNotPossible();
+						// Second, Try blocking the hostile opponent
+						if (TryBlockingAttack(calculationBoard.humans[index], botKeySquare, board)) {
+							notifications.BotsThink_BlockingMoveMade();
+							return true;
+						}
+						else {
+							notifications.BotsThink_BlockingMoveNotPossible();
+						}
 					}
 				}
 			}

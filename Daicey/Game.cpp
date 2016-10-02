@@ -115,17 +115,21 @@ bool Game::GameOverConditionMet() {
 		return true;
 	}
 
-	//If the human key square is occupied by a bot die
+	//If the human key square is occupied by the bots King die 
 	if (board.IsSquareOccupied(0, 4)) {
 		if (board.GetSquareResident(0, 4)->IsBotOperated()) {
-			return true;
+			if (board.GetSquareResident(0, 4)->IsKing()) {
+				return true;
+			}
 		}
 	}
 
-	//If the computer key square is occupied by a human die
+	//If the computer key square is occupied by the human King die
 	if (board.IsSquareOccupied(7, 4)) {
 		if (!board.GetSquareResident(7, 4)->IsBotOperated()) {
-			return true;
+			if (board.GetSquareResident(7, 4)->IsKing()) {
+				return true;
+			}
 		}
 	}
 

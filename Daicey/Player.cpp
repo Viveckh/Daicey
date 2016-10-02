@@ -296,6 +296,8 @@ bool Player::MakeAMove(int startRow, int startCol, int endRow, int endCol, Board
 	// Path 1 and 2 need to offset the changes done by the first function, and hence the startRow/startCol has a counter added in the second function
 	if (IsValidDestination(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol))) {
 		if (IsPathValid(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board)) {
+			int topValueAtStart = board.GetSquareResident(startRow, startCol)->GetTop();
+			int rightValueAtStart = board.GetSquareResident(startRow, startCol)->GetRight();
 
 			// If user has input a preferred path in case of a 90 degree turn, we need to honor that
 			if (path != 0) {
@@ -319,30 +321,30 @@ bool Player::MakeAMove(int startRow, int startCol, int endRow, int endCol, Board
 			case 1:
 				KeepRollingVertically(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
 				KeepRollingLaterally(*board.GetSquareResident(startRow + counterRowsTraversed, startCol), board.GetSquareAtLocation(endRow, endCol), board);
-				printNotifications ? notifications.Msg_NatureOfPathTaken("VERTICAL & LATERAL") : notifications.Msg_NoMsg();
+				notifications.Msg_NatureOfPathTaken("VERTICAL & LATERAL");
 				break;
 				// First laterally, a 90 degree turn, then vertically
 			case 2:
 				KeepRollingLaterally(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
 				KeepRollingVertically(*board.GetSquareResident(startRow, startCol + counterColumnsTraversed), board.GetSquareAtLocation(endRow, endCol), board);
-				printNotifications ? notifications.Msg_NatureOfPathTaken("LATERAL & VERTICAL") : notifications.Msg_NoMsg();
+				notifications.Msg_NatureOfPathTaken("LATERAL & VERTICAL");
 				break;
 				// Vertically only
 			case 3:
 				KeepRollingVertically(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
-				printNotifications ? notifications.Msg_NatureOfPathTaken("VERTICAL") : notifications.Msg_NoMsg();
+				notifications.Msg_NatureOfPathTaken("VERTICAL");
 				break;
 				// Laterally only
 			case 4:
 				KeepRollingLaterally(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board);
-				printNotifications ? notifications.Msg_NatureOfPathTaken("LATERAL") : notifications.Msg_NoMsg();
+				notifications.Msg_NatureOfPathTaken("LATERAL");
 				break;
 			default:
 				//ATTENTION: LOG ERROR SAYING THE PATH DESTINATION COULDN'T BE SET FOR SOME REASON
-				printNotifications ? notifications.Msg_CrashedWhileMakingTheMove() : notifications.Msg_NoMsg();
+				notifications.Msg_CrashedWhileMakingTheMove();
 				return false;
 			}
-			notifications.Msg_MoveDescription(startRow + 1, startCol + 1, endRow + 1, endCol + 1);	// +1 To compensate for 1 offset in the array indexes
+			notifications.Msg_MoveDescription(startRow + 1, startCol + 1, endRow + 1, endCol + 1, topValueAtStart, rightValueAtStart, board.GetSquareResident(endRow, endCol)->GetTop(), board.GetSquareResident(endRow, endCol)->GetRight(), board.GetSquareResident(endRow, endCol)->IsBotOperated());	// +1 To compensate for 1 offset in the array indexes
 			return true;
 		}
 	}

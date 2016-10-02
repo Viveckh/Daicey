@@ -9,7 +9,7 @@ class Notifications {
 public:
 	// Improper input error msg
 	inline void Msg_ImproperInput() {
-		cout << "ERROR: Why you annoying me with improper inputs? Go, Try again!" << endl;
+		cout << "ERROR:\t\t Why you annoying me with improper inputs? Go, Try again!" << endl;
 	}
 
 	// Enter starting coordinates prompt
@@ -24,37 +24,37 @@ public:
 
 	// Input out of bounds error msg
 	inline void Msg_InputOutOfBounds() {
-		cout << "ERROR: Input co-ordinates out of bound. *Rolls eyes* Try again!" << endl;
+		cout << "ERROR:\t\t Input co-ordinates out of bound. *Rolls eyes* Try again!" << endl;
 	}
 
 	// Moving another player's dice error msg
 	inline void Msg_WrongDice() {
-		cout << "ERROR: Woah! Foul! That ain't your dice to move homie!" << endl;
+		cout << "ERROR:\t\t Woah! Foul! That ain't your dice to move homie!" << endl;
 	}
 
 	// No dice to move error msg
 	inline void Msg_NoDiceToMove() {
-		cout << "ERROR: Don't you see there is no dice to move in that co-ordinate?" << endl;
+		cout << "ERROR:\t\t Don't you see there is no dice to move in that co-ordinate?" << endl;
 	}
 
 	// Invalid move error msg
 	inline void Msg_InvalidMove() {
-		cout << "ERROR: Why you always trying Invalid Moves?" << endl;
+		cout << "ERROR:\t\t Why you always trying Invalid Moves?" << endl;
 	}
 
 	// Trying to run own dice error msg
 	inline void Msg_RunningOverOwnDice() {
-		cout << "MSG: Are you really trying to capture your own dice, bonehead?" << endl;
+		cout << "MSG:\t\t Are you really trying to capture your own dice, bonehead?" << endl;
 	}
 
 	// Captured opponent msg
 	inline void Msg_CapturedAnOpponent() {
-		cout << endl << "MSG: You just captured an opponent dice. Impressive for a Knucklehead? Eh!" << endl;
+		cout << endl << "MSG:\t\t You just captured an opponent dice. Impressive for a Knucklehead? Eh!" << endl;
 	}
 
 	// No valid path msg
 	inline void Msg_NoValidPath() {
-		cout << "ERROR: Yo numskull! NO Valid Path was found to get to your selected destination. BOOO!" << endl;
+		cout << "ERROR:\t\t Yo numskull! NO Valid Path was found to get to your selected destination. BOOO!" << endl;
 	}
 
 	// Enter path choice for 90 degree turns prompt
@@ -64,28 +64,35 @@ public:
 
 	// 90 degree turns re-routed msg
 	inline void Msg_90DegreePathSelectionNotProcessed() {
-		cout << "MSG: We're sorry, but your DUMB path selection for the 90 Degree turn was Invalid." << endl;
-		cout << "So, we - the smart bots species - automatically chose the alternate route for you." << endl;
+		cout << "MSG:\t\t We're sorry, but your DUMB path selection for the 90 Degree turn was Invalid." << endl;
+		cout << "\t\t So, we - the smart bots species - automatically chose the alternate route for you." << endl;
 	}
 
 	// Nature of path taken msg
 	inline void Msg_NatureOfPathTaken(string path) {
-		cout << "MSG: A " << path << " path was taken to get to the destination" << endl;
+		cout << "MSG:\t\t A " << path << " path was taken to get to the destination" << endl;
 	}
 
 	// Displaying start and end coordinates of the move
-	inline void Msg_MoveDescription(int startRow, int startCol, int endRow, int endCol) {
-		cout << "ACTION: The dice in (" << startRow << ", " << startCol << ") was moved to (" << endRow << ", " << endCol << ")" << endl;
+	inline void Msg_MoveDescription(int startRow, int startCol, int endRow, int endCol, int topValueAtStart, int rightValueAtStart, int topValueAtEnd, int rightValueAtEnd, bool isBotOperated) {
+		char player;
+		isBotOperated ? player = 'C' : player = 'H';
+		isBotOperated ? rightValueAtStart = SUM_OF_OPPOSITE_SIDES - rightValueAtStart : rightValueAtStart = rightValueAtStart;
+		isBotOperated ? rightValueAtEnd = SUM_OF_OPPOSITE_SIDES - rightValueAtEnd : rightValueAtEnd = rightValueAtEnd;
+
+		cout << "ACTION:\t\t The dice " << player << topValueAtStart << rightValueAtStart << " in (" << startRow << ", " << startCol << ") was moved to (" << endRow << ", " << endCol << "). It is now " << player << topValueAtEnd << rightValueAtEnd << endl;
+		cout << "\t\t There were " << abs(startRow - endRow) << " vertical rolls & " << abs(startCol - endCol) << " horizontal rolls made." << endl;
+
 	}
 
 	// Crash msg
 	inline void Msg_CrashedWhileMakingTheMove() {
-		cout << "ERROR: Whoopsie Daisy! The program crashed while making the move." << endl;
+		cout << "ERROR:\t\t Whoopsie Daisy! The program crashed while making the move." << endl;
 	}
 
 	// Displays toss results
 	inline void Msg_TossResults(string winner) {
-		cout << "MSG: " << winner << " won the toss!" << endl;
+		cout << "MSG:\t\t " << winner << " won the toss!" << endl;
 	}
 
 	// Displays the turns
@@ -119,7 +126,7 @@ public:
 
 	// Prompt to ask user if they want to play again
 	inline void Msg_WantToPlayAgain() {
-		cout << endl << "MSG: Do you want to play another round? (y or n)? ";
+		cout << endl << "MSG:\t\t Do you want to play another round? (y or n)? ";
 	}
 
 	// Draws a divider line
@@ -159,56 +166,63 @@ public:
 
 	// Bot trying to capture opponent key pieces/squares msg
 	inline void BotsThink_TryingToCaptureOpponentKeys() {
-		cout << "Bots Mumbling: Trying to capture opponent's King or KeySquare..." << endl;
+		cout << "Bots Mumbling:\t Trying to capture opponent's King or KeySquare..." << endl;
+	}
+
+	inline void BotsThink_CheckingKingNKeySquareSafety() {
+		cout << "Bots Mumbling:\t Monitoring territory to ensure the King & KeySquare are safe..." << endl;
 	}
 
 	// Key Threat detected msg
 	inline void BotsThink_KeyThreatDetected(string whosUnderThreat) {
-		cout << "Bots Mumbling: Imminent threat has been detected for the " << whosUnderThreat << endl;
+		cout << "Bots Mumbling:\t Imminent threat has been detected for the " << whosUnderThreat << endl;
 	}
 
 	// hostile opponent captured msg
 	inline void BotsThink_HostileOpponentCaptured(string whosUnderThreat) {
-		cout << "Bots Mumbling: That hostile opponent aiming to attack our " << whosUnderThreat << " has been captured." << endl;
+		cout << "Bots Mumbling:\t That hostile opponent aiming to attack our " << whosUnderThreat << " has been captured." << endl;
 	}
 
 	// hostile opponent not capturable msg
 	inline void BotsThink_HostileOpponentUncapturable(string whosUnderThreat) {
-		cout << "Bots Mumbling: That hostile opponent aiming to attack " << whosUnderThreat << " couldn't be captured. Trying alternatives..." << endl;
+		cout << "Bots Mumbling:\t That hostile opponent aiming to attack " << whosUnderThreat << " couldn't be captured. Trying alternatives..." << endl;
 	}
 
 	// Blocking move successful msg
 	inline void BotsThink_BlockingMoveMade() {
-		cout << "Bots Mumbling: A Blocking move was successfully made to obstruct the hostile opponent." << endl;
+		cout << "Bots Mumbling:\t A Blocking move was successfully made to obstruct the hostile opponent." << endl;
 	}
 
 	// Blocking move not successful msg
 	inline void BotsThink_BlockingMoveNotPossible() {
-		cout << "Bots Mumbling: A Blocking move wasn't possible at this time. Trying other options..." << endl;
+		cout << "Bots Mumbling:\t A Blocking move wasn't possible at this time. Trying other options..." << endl;
 	}
 
 	// King relocation successful msg
 	inline void BotsThink_KingMoved() {
-		cout << "Bots Mumbling: The king has been moved and the threat has been averted for now." << endl;
+		cout << "Bots Mumbling:\t The king has been moved and the threat has been averted for now." << endl;
 	}
 	
 	// King move unsafe msg
 	inline void BotsThink_UnsafeToMoveKing() {
-		cout << "Bots Mumbling: No safe surroundings to move the king. The humans have trapped our King." << endl;
+		cout << "Bots Mumbling:\t No safe surroundings to move the king. The humans have trapped our King." << endl;
 	}
 
 	// Trying to capture opponent msg
 	inline void BotsThink_TryingToCaptureOpponentDice() {
-		cout << "Bots Mumbling: Looking for any vulnerable opponent dice to capture at this point..." << endl;
+		cout << "Bots Mumbling:\t Looking for any vulnerable opponent dice to capture at this point..." << endl;
 	}
 
 	// Captured opponent msg
 	inline void BotsThink_CapturedOpponentDice() {
-		cout << "Bots Mumbling: We captured an opponent die." << endl;
+		cout << "Bots Mumbling:\t We captured an opponent die." << endl;
 	}
 
 	// searching an ordinary move msg
 	inline void BotsThink_SearchingOrdinaryMove() {
-		cout << "Bots Mumbling: Examining possible moves to get closer to the opoonent king/keysquare..." << endl;
+		cout << "Bots Mumbling:\t Examining possible moves to get closer to the opponent king/keysquare..." << endl;
 	}
+
+	private:
+		const int SUM_OF_OPPOSITE_SIDES = 7;
 };
