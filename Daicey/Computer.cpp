@@ -72,6 +72,7 @@ bool Computer::Play(Board &board) {
 
 			// Check if KeySquare is under imminent threat by opponent's king dice
 			if (calculationBoard.humans[index].IsKing()) {
+				// This might actually not be helpful at all since everything that is being done here to stop opponent king has already been attempted above.
 				if (IsValidDestination(calculationBoard.humans[index], botKeySquare)) {
 					if (IsPathValid(calculationBoard.humans[index], botKeySquare, calculationBoard)) {
 						notifications.BotsThink_KeyThreatDetected("KeySquare");
@@ -84,7 +85,7 @@ bool Computer::Play(Board &board) {
 							notifications.BotsThink_HostileOpponentUncapturable("KeySquare");
 						}
 
-						// Second, Try blocking the hostile opponent
+						// Second, Try blocking the hostile opponent (this can't really be done since the opponent will be right next to the square.)
 						if (TryBlockingAttack(calculationBoard.humans[index], botKeySquare, board)) {
 							notifications.BotsThink_BlockingMoveMade();
 							return true;

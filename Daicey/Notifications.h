@@ -117,7 +117,7 @@ public:
 			cout << "The Computer Won the Tournament. *reinforcing the notion once again that we bots are better than you humans*" << endl;
 		}
 		else if (humanScore > botScore) {
-			cout << "Congratulations! You won the Tournament. Our programmer must've done an inefficient job on algorithms for someone like you to win." << endl;
+			cout << "Congratulations! You won the Tournament. Our programmer must've done a terrible job on algorithms for someone like you to win." << endl;
 		}
 		else {
 			cout << "It was a draw. Guess we'll see who's better in the next tournament." << endl;
