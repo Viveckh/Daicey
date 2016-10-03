@@ -1,5 +1,25 @@
+/*	************************************************************
+* Name:			Vivek Pandey								*
+* Project:		Duell C++									*
+* Class:		CMPS 366									*
+* Date:			10/4/2016									*
+************************************************************ */
+
 #include "BoardView.h"
 
+/* *********************************************************************
+Function Name: DrawBoard
+
+Purpose: Draws the game board to the console
+
+Parameters: board, board object to be drawn
+
+Return Value: none
+
+Local Variables: none besides loop counters
+
+Assistance Received: none
+********************************************************************* */
 // Draws the GameBoard to the console
 void BoardView::DrawBoard(Board &board) {
 	//Drawing the board inverted cause zero row is supposed to be at the bottom
@@ -31,7 +51,19 @@ void BoardView::DrawBoard(Board &board) {
 	cout << "\t1\t2\t3\t4\t5\t6\t7\t8\t9" << endl << endl;
 }
 
+/* *********************************************************************
+Function Name: ViewNonCapturedDice
 
+Purpose: Display the array indexes of non captured dice in the gameboard
+
+Parameters: board, the Board to be inspected
+
+Return Value: none
+
+Local Variables: none besides loop counters
+
+Assistance Received: none
+********************************************************************* */
 // Prints out the indexes of player dice that are still active on the gameboard
 void BoardView::ViewNonCapturedDice(Board &board) {
 	cout << "Non Captured Human indexes: ";

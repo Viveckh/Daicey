@@ -1,3 +1,10 @@
+/*	************************************************************
+* Name:			Vivek Pandey								*
+* Project:		Duell C++									*
+* Class:		CMPS 366									*
+* Date:			10/4/2016									*
+************************************************************ */
+
 #include "Player.h"
 
 // Initializing static variable for toggling notifications print
@@ -19,6 +26,21 @@ Player::Player() {
 //
 */
 
+/* *********************************************************************
+Function Name: RollUp
+
+Purpose: To Roll up a dice by one row and change the appropriate dice & board values accordingly to reflect changes
+
+Parameters:
+dice, the dice to be moved (passed by ref)
+board, the board in context (passed by ref)
+
+Return Value: none
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Does one up roll of the dice
 void Player::RollUp(Dice &dice, Board &board) {
 
@@ -44,6 +66,21 @@ void Player::RollUp(Dice &dice, Board &board) {
 	board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
 }
 
+/* *********************************************************************
+Function Name: RollDown
+
+Purpose: To Roll down a dice by one row and change the appropriate dice & board values accordingly to reflect changes
+
+Parameters:
+dice, the dice to be moved (passed by ref)
+board, the board in context (passed by ref)
+
+Return Value: none
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Does one down roll of the dice
 void Player::RollDown(Dice &dice, Board &board) {
 	//if (dice.GetRow() > 0) {}		Put this wrapper around the entire function to validate coordinates
@@ -68,6 +105,21 @@ void Player::RollDown(Dice &dice, Board &board) {
 	board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
 }
 
+/* *********************************************************************
+Function Name: RollLeft
+
+Purpose: To Roll left a dice by one column and change the appropriate dice & board values accordingly to reflect changes
+
+Parameters:
+dice, the dice to be moved (passed by ref)
+board, the board in context (passed by ref)
+
+Return Value: none
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Does one left roll of the dice
 void Player::RollLeft(Dice &dice, Board &board) {
 	// if (dice.GetColumn() > 0) {}		Put this wrapper around the entire function to validate coordinates
@@ -92,6 +144,21 @@ void Player::RollLeft(Dice &dice, Board &board) {
 	board.SetSquareOccupied(dice.GetRow(), dice.GetColumn(), dice);
 }
 
+/* *********************************************************************
+Function Name: RollRight
+
+Purpose: To Roll right a dice by one column and change the appropriate dice & board values accordingly to reflect changes
+
+Parameters:
+dice, the dice to be moved (passed by ref)
+board, the board in context (passed by ref)
+
+Return Value: none
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Does one right roll of the dice
 void Player::RollRight(Dice &dice, Board &board) {
 	// if (dice.GetColumn() < 8) {}		Put this wrapper around the entire function to validate coordinates
@@ -122,6 +189,21 @@ void Player::RollRight(Dice &dice, Board &board) {
 //
 */
 
+/* *********************************************************************
+Function Name: IsValidDestination
+
+Purpose: To check if the given square is a valid destination distance-wise for the given dice
+
+Parameters:
+dice, the dice as the origin
+destination, the destination square
+
+Return Value: true if a valid destination, false if not
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Checks if the destination is a valid one
 bool Player::IsValidDestination(Dice dice, Square destination) {
 
@@ -142,6 +224,24 @@ bool Player::IsValidDestination(Dice dice, Square destination) {
 	return false;
 }
 
+/* *********************************************************************
+Function Name: IsPathValid
+
+Purpose: To find an appropriate path, if exists, between the origin and destination
+		 It sets the pathChoice varible with the proper path number
+		 1 for vertical & lateral, 2 for lateral & vertical, 3 for vertical only, 4 for lateral only
+
+Parameters:
+dice, the dice as the origin
+destination, the destination square
+board, the board in context
+
+Return Value: true if a path exists, false if not
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Checks the validity of a path to get from origin to destination square
 bool Player::IsPathValid(Dice dice, Square destination, Board board) {
 	// The temporary dice jumps from one square to the other and checks if it is already occupied
@@ -222,6 +322,25 @@ bool Player::IsPathValid(Dice dice, Square destination, Board board) {
 	return true;
 }
 
+/* *********************************************************************
+Function Name: TraversedRowsWithoutBlockade
+
+Purpose: To traverse rows and make sure blockade don't exist
+		 Used in conjunction with IsPathValid() function.
+		The passed by reference values are actually the temporary values passed by value in IsPathValid() function
+
+Parameters:
+The passed by reference values are actually the temporary values passed by value in IsPathValid() function
+dice, the dice as the origin
+destination, the destination square
+board, the board in context
+
+Return Value: true if traversal along rows successful without blockade, false otherwise
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Returns true if traversal is successful without blockade until the destination row (The passed by reference dice is actually a temporary dice itself)
 bool Player::TraversedRowsWithoutBlockade(Dice &dice, Square destination, Board board) {
 	// Still passed by reference cause in case of a 90 degree turn, we want the dice state preserved to call TraversedColumnsWithoutBlockade
@@ -252,6 +371,25 @@ bool Player::TraversedRowsWithoutBlockade(Dice &dice, Square destination, Board 
 	return true;
 }
 
+/* *********************************************************************
+Function Name: TraversedColumnsWithoutBlockade
+
+Purpose: To traverse columns and make sure blockade don't exist
+		Used in conjunction with IsPathValid() function.
+		The passed by reference values are actually the temporary values passed by value in IsPathValid() function
+
+Parameters:
+The passed by reference values are actually the temporary values passed by value in IsPathValid() function
+dice, the dice as the origin
+destination, the destination square
+board, the board in context
+
+Return Value: true if traversal along columns successful without blockade, false otherwise
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Returns true if traversal is successful without blockade until the destination column (The passed by reference dice is actually a temporary dice itself)
 bool Player::TraversedColumnsWithoutBlockade(Dice &dice, Square destination, Board board) {
 	counterColumnsTraversed = 0;
@@ -288,6 +426,27 @@ bool Player::TraversedColumnsWithoutBlockade(Dice &dice, Square destination, Boa
 //
 */
 
+/* *********************************************************************
+Function Name: MakeAMove
+
+Purpose: To validate the move from and to the given coordinates, and process it if valid
+
+Parameters:
+startRow, integer value of start row coordinate
+startCol, integer value of start column coordinate
+endRow, integer value of end row coordinate
+endCol, integer value of end Column coordinate
+board, the board in context where the move is to be made (passed by ref)
+path, the path selected by the human player in case of a 90 degree turn, if any
+
+Return Value: true if move successful, false otherwise
+
+Local Variables:
+topValueAtStart, the top value of the dice at starting coordinate
+rightValueAtStart, the right value of the dice at starting coordinate
+
+Assistance Received: none
+********************************************************************* */
 // Checks the validity of a given move, and performs it on the gameboard if valid
 bool Player::MakeAMove(int startRow, int startCol, int endRow, int endCol, Board &board, int path) {
 	//Check if destination is valid, then if path is valid
@@ -354,6 +513,24 @@ bool Player::MakeAMove(int startRow, int startCol, int endRow, int endCol, Board
 //These two following functions will modify the actual gameboard. So pass the real game objects
 // Make sure you check the validity of the path beforehand. Cause they won't do the checking
 
+/* *********************************************************************
+Function Name: KeepRollingVertically
+
+Purpose: To continue the move vertically until the dice reaches the destination row
+		Used in conjunction with the MakeAMove() function
+		This modifies the actually gameboard in context, so be careful while using it
+
+Parameters:
+dice, the dice of origin
+destination, the destination square to be reached
+board, the board in context (will be modified permanently)
+
+Return Value: none
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Rolls the dice vertically until it is in the destination row
 void Player::KeepRollingVertically(Dice &dice, Square &destination, Board &board) {
 	counterRowsTraversed = 0;
@@ -369,6 +546,24 @@ void Player::KeepRollingVertically(Dice &dice, Square &destination, Board &board
 	} while (dice.GetRow() != destination.GetRow());
 }
 
+/* *********************************************************************
+Function Name: KeepRollingLaterally
+
+Purpose: To continue the move laterally until the dice reaches the destination column
+Used in conjunction with the MakeAMove() function
+This modifies the actually gameboard in context, so be careful while using it
+
+Parameters:
+dice, the dice of origin
+destination, the destination square to be reached
+board, the board in context (will be modified permanently)
+
+Return Value: none
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Rolls the die laterally until it is in the destination column
 void Player::KeepRollingLaterally(Dice &dice, Square &destination, Board &board) {
 	counterColumnsTraversed = 0;

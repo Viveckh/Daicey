@@ -1,5 +1,34 @@
+/*	************************************************************
+* Name:			Vivek Pandey								*
+* Project:		Duell C++									*
+* Class:		CMPS 366									*
+* Date:			10/4/2016									*
+************************************************************ */
+
 #include "Computer.h"
 
+/* *********************************************************************
+Function Name: Play
+
+Purpose: Calculate the best move on behalf of the Computer Player and process the move
+
+Parameters: board, the current state of the board where the move needs to be made
+
+Return Value: true if a move is made successfully, false if no move made
+
+Local Variables: 
+calculationBoard, a copy of current board to use for move calculation purposes
+humanKingSquare, a copy of human's king square
+humanKeySquare, a copy of human's key square
+botKingSquare, a copy of bot's king square
+botKeySquare, a copy of bot's key square
+index & jindex, counter for loops
+moveCoordinates, tuple to store start and end coordinates of the best move calculated so far
+minDistance, integer to store the minimum distance of a move so far
+distanceFromFinalDestination,  integer to store the distance from key pieces in current calculated move
+
+Assistance Received: none
+********************************************************************* */
 // Prioritizes, Calculates and makes the proper move for Computer on its turn
 bool Computer::Play(Board &board) {
 	printNotifications = false;
@@ -163,6 +192,23 @@ bool Computer::Play(Board &board) {
 	return true;
 }
 
+/* *********************************************************************
+Function Name: TryBlockingAttack
+
+Purpose: To attempt to make a blocking move on a hostile dice
+
+Parameters:
+hostileDice, a Dice object that needs to be blocked
+squareToProtect, the square to be protected from hostile dice
+board, the board where the blocking needs to be done (passed by ref)
+
+Return Value: true if blocking move successful, false if unsuccessful
+
+Local Variables:
+path, integer to store the potential path that will be used by the hostile dice to get to squareToProtect
+
+Assistance Received: none
+********************************************************************* */
 // Attempts to block the path of an opponent who is a potential threat
 bool Computer::TryBlockingAttack(Dice hostileDice, Square squareToProtect, Board &board) {
 	//Get the path choice first
@@ -196,6 +242,24 @@ bool Computer::TryBlockingAttack(Dice hostileDice, Square squareToProtect, Board
 	return false;
 }
 
+/* *********************************************************************
+Function Name: FindBlockPointVertically
+
+Purpose: To Find a block point in vertical direction to block a hostile dice
+		Called in conjunction with above TryBlockingAttack() function
+
+Parameters:
+Normally Passed by reference from the above function of TryBlockingAttack
+hostileDice, a Dice object that needs to be blocked (passed by ref)
+squareToProtect, the square to be protected from hostile dice (passed by ref)
+board, the board where the blocking needs to be done (passed by ref)
+
+Return Value: true if blocking successful, false if unsuccessful
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Finds a co-ordinate to place blocking dice on the vertical route
 bool Computer::FindBlockPointVertically(Dice &hostileDice, Square &squareToProtect, Board &board) {
 	do {
@@ -219,6 +283,24 @@ bool Computer::FindBlockPointVertically(Dice &hostileDice, Square &squareToProte
 	return false;
 }
 
+/* *********************************************************************
+Function Name: FindBlockPointLaterally
+
+Purpose: To Find a block point in lateral direction to block a hostile dice
+Called in conjunction with above TryBlockingAttack() function
+
+Parameters:
+Normally Passed by reference from the above function of TryBlockingAttack
+hostileDice, a Dice object that needs to be blocked (passed by ref)
+squareToProtect, the square to be protected from hostile dice (passed by ref)
+board, the board where the blocking needs to be done (passed by ref)
+
+Return Value: true if blocking successful, false if unsuccessful
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Finds a co-ordinate to place blocking dice on the lateral route
 bool Computer::FindBlockPointLaterally(Dice &hostileDice, Square &squareToProtect, Board &board) {
 	do {
@@ -242,6 +324,21 @@ bool Computer::FindBlockPointLaterally(Dice &hostileDice, Square &squareToProtec
 	return false;
 }
 
+/* *********************************************************************
+Function Name: TryCapturingTheHostileOpponent
+
+Purpose: To try and capture a hostile opponent
+
+Parameters:
+hostileDice, the hostile dice that needs to be captured
+board, the game board in context (passed by ref)
+
+Return Value: true if capture successful, false if unsuccessful
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Tries capturing a hostile opponent who is a potential threat
 bool Computer::TryCapturingTheHostileOpponent(Dice hostileDice, Board &board) {
 	for (int i = 0; i < TEAMSIZE; i++) {
@@ -255,6 +352,21 @@ bool Computer::TryCapturingTheHostileOpponent(Dice hostileDice, Board &board) {
 	return false;
 }
 
+/* *********************************************************************
+Function Name: TryMovingKing
+
+Purpose: To move the king to protect from opponent attack
+
+Parameters:
+kingSquare, the square where the king is located
+board, the game board in context
+
+Return Value: true if the move successful, false if unsuccessful
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Tries moving the king to a secure position
 bool Computer::TryMovingKing(Square kingSquare, Board &board) {
 	// Check if it is possible/safe to move the king upwards in the board
@@ -303,6 +415,21 @@ bool Computer::TryMovingKing(Square kingSquare, Board &board) {
 	return false;
 }
 
+/* *********************************************************************
+Function Name: IsInDanger
+
+Purpose: To check and see if the given square is at risk in the given gameboard
+
+Parameters:
+squareAtRisk, the square that needs to be checked if it is in danger
+board, the game board in context
+
+Return Value: true if square at risk, false if safe
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Checks if a given square is at risk from opponent dices
 bool Computer::IsInDanger(Square squareAtRisk, Board board) {
 	for (int index = 0; index < TEAMSIZE; index++) {

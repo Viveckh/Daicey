@@ -1,5 +1,25 @@
+/*	************************************************************
+* Name:			Vivek Pandey								*
+* Project:		Duell C++									*
+* Class:		CMPS 366									*
+* Date:			10/4/2016									*
+************************************************************ */
+
 #include "Board.h"
 
+/* *********************************************************************
+Function Name: Board Constructor
+
+Purpose: Sets up a board with the player dices in their respective spots
+
+Parameters: None
+
+Return Value: None
+
+Local Variables: none besides loop counters
+
+Assistance Received: none
+********************************************************************* */
 // Default Constructor
 Board::Board() {
 

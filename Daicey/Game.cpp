@@ -1,3 +1,10 @@
+/*	************************************************************
+* Name:			Vivek Pandey								*
+* Project:		Duell C++									*
+* Class:		CMPS 366									*
+* Date:			10/4/2016									*
+************************************************************ */
+
 #include "Game.h"
 
 // Default Constructor
@@ -14,6 +21,21 @@ Game::Game() {
 	path = 0;
 }
 
+/* *********************************************************************
+Function Name: ImplementGame
+
+Purpose: Runs a full game until someone wins or user requests serialization
+
+Parameters:
+restoringGame, boolean value stating whether a restore of previous game was requested by user
+nextPlayer, a string that contains who's turn is next (if restoring)
+
+Return Value: 'b' if bot wins, 'h' if human wins, 'S' if serialization requested during bot turn, 's' if serialization requested during human turn
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Implements a Round. Return value is 'h' for human winner, 'b' for bot winner, and 's' for Serialization
 char Game::ImplementGame(bool restoringGame, string nextPlayer) {
 	// Set the turns if restoring a game from saved state
@@ -92,6 +114,19 @@ char Game::ImplementGame(bool restoringGame, string nextPlayer) {
 	} while (1);
 }
 
+/* *********************************************************************
+Function Name: UserWantsToSerialize
+
+Purpose: Ask human player if they want to serialize
+
+Parameters: none
+
+Return Value: true if user requests serialization, false otherwise
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Asks if user wants to serialize & returns true if user wants to serialize
 bool Game::UserWantsToSerialize() {
 	notifications.Msg_SerializePrompt();
@@ -108,6 +143,19 @@ bool Game::UserWantsToSerialize() {
 	return false;
 }
 
+/* *********************************************************************
+Function Name: GameOverConditionMet
+
+Purpose: To check if the condition for game over has been met
+
+Parameters: none
+
+Return Value: true if condition met for game to be over, false otherwise
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Checks if the condition to end the game has been met
 bool Game::GameOverConditionMet() {
 	//If one of the kings captured
@@ -137,6 +185,19 @@ bool Game::GameOverConditionMet() {
 	return false;
 }
 
+/* *********************************************************************
+Function Name: GetUserInput
+
+Purpose: To get user input for coordinates
+
+Parameters: none
+
+Return Value: none
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Gets user input for coordinates if it is a human's turn
 void Game::GetUserInput() {
 	startRow = 0;
@@ -173,6 +234,19 @@ void Game::GetUserInput() {
 	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
+/* *********************************************************************
+Function Name: TossToBegin
+
+Purpose: To conduct a toss and set the turn of appropriate player to true
+
+Parameters: none
+
+Return Value: none
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Does a toss to determine which team will start the game
 void Game::TossToBegin() {
 	srand(time(NULL));

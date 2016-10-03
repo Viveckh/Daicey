@@ -1,3 +1,10 @@
+/*	************************************************************
+* Name:			Vivek Pandey								*
+* Project:		Duell C++									*
+* Class:		CMPS 366									*
+* Date:			10/4/2016									*
+************************************************************ */
+
 #include "Dice.h"
 
 // Default Constructor
@@ -22,6 +29,21 @@ Dice::Dice(int row, int column, bool king) {
 	this->king = king;
 }
 
+/* *********************************************************************
+Function Name: SetBeginningOrientation
+
+Purpose: To set the remaining sides of a dice based on known sides at the beginning of game
+
+Parameters:
+top, the top integer value of the dice
+isBot, boolean value stating if the dice is bot operated
+
+Return Value: none
+
+Local Variables: none besides loop counters
+
+Assistance Received: none
+********************************************************************* */
 // Calculates & Sets the beginning orientation with face values of a dice in the home row
 void Dice::SetBeginningOrientation(int top, bool isBot) {
 	//Values given in program specs
@@ -74,6 +96,21 @@ void Dice::SetBeginningOrientation(int top, bool isBot) {
 	}
 }
 
+/* *********************************************************************
+Function Name: SetRemainingSides
+
+Purpose: To set the remaining sides of a dice based on the known two (top-right for humans, top-left for bots)
+
+Parameters:
+arg1, the top value of dice
+arg2, the right value if a human dice, the left value if a bot dice
+
+Return Value: none
+
+Local Variables: none
+
+Assistance Received: had a discussion with Sujil Maharjan on how to approach this situation
+********************************************************************* */
 // Calculates & Sets the remaining sides of a dice given the Top-left or Top-Right sides
 void Dice::SetRemainingSides(int arg1, int arg2) {
 	// The first parameter is the top, the second one can either be left (for computer) or right (for human)

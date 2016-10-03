@@ -1,3 +1,10 @@
+/*	************************************************************
+* Name:			Vivek Pandey								*
+* Project:		Duell C++									*
+* Class:		CMPS 366									*
+* Date:			10/4/2016									*
+************************************************************ */
+
 #include "Serializer.h"
 
 //Default Constructor
@@ -5,6 +12,23 @@ Serializer::Serializer() {
 	fileName = "C:\\Duell_LastGameSerialization.txt";
 }
 
+/* *********************************************************************
+Function Name: WriteToFile
+
+Purpose: To take the current tournament state and serialize it to a text file
+
+Parameters:
+board, the game board in context
+botWins, the number of bot wins in tournament
+humanWins, the number of human wins in tournament
+nextPlayer, string consisting of the player who's turn is next
+
+Return Value: true if write successful, false if couldn't open file
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Writing serialized game state along with tournament history results to file
 bool Serializer::WriteToFile(Board &board, int botWins, int humanWins, string nextPlayer) {
 	// Update the multidimensional string array for serialization first
@@ -33,6 +57,29 @@ bool Serializer::WriteToFile(Board &board, int botWins, int humanWins, string ne
 	return true;
 }
 
+/* *********************************************************************
+Function Name: ReadAFile
+
+Purpose: To read a serialized file and restore the game in the actual game board
+
+Parameters:
+All the parameters will be passed by reference, so be careful using it
+fileName, the file path with name for the serialization file to restore from
+board, the board to restore in
+botWins, the number of bot wins
+humanWins, the number of human wins
+nextPlayer, string that consists of whose turn is next
+
+Return Value: true if reading successful, false otherwise
+
+Local Variables:
+reader, ifstream read stream from file
+line, string that consists of next line to parse
+lineStream, istringstream to help read the lines
+temp, a temporary string
+
+Assistance Received: none
+********************************************************************* */
 // Reads a serialization file and stores in a multidimensional string array for restoring purposes
 bool Serializer::ReadAFile(string fileName, Board &board, int &botWins, int &humanWins, string &nextPlayer) {
 	ifstream reader;
@@ -108,6 +155,21 @@ bool Serializer::ReadAFile(string fileName, Board &board, int &botWins, int &hum
 	return true;
 }
 
+/* *********************************************************************
+Function Name: SetBoard
+
+Purpose: To set the actual game board based on the contents of a string multidimensional array populated by above ReadAFile() function
+
+Parameters: board, the game board to restore the state in
+
+Return Value: none
+
+Local Variables:
+humanCount, botCount - the count of number of dices successfully restored in the gameboard
+tempHumanIndex, tempBotIndex - the index of the current dice being restored in the gameboard
+
+Assistance Received: none
+********************************************************************* */
 // Sets the given board based on the contents of the string array restored by reading file
 void Serializer::SetBoard(Board &board) {
 	// This one is for going through the Human's player dices
@@ -212,6 +274,19 @@ void Serializer::SetBoard(Board &board) {
 	}
 }
 
+/* *********************************************************************
+Function Name: UpdateSerializedBoard
+
+Purpose: To read the current game board and save its state in a multi dimensional string array for purposes of writing to file
+
+Parameters: board, the current game board
+
+Return Value: none
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Stores the game state in a multidimensional string array.
 void Serializer::UpdateSerializedBoard(Board &board) {
 	for (int row = 7; row >= 0; row--) {

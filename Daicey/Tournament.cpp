@@ -1,3 +1,10 @@
+/*	************************************************************
+* Name:			Vivek Pandey								*
+* Project:		Duell C++									*
+* Class:		CMPS 366									*
+* Date:			10/4/2016									*
+************************************************************ */
+
 #include "Tournament.h"
 
 // Default Constructor
@@ -11,6 +18,19 @@ Tournament::Tournament() {
 	nextPlayer = "";
 }
 
+/* *********************************************************************
+Function Name: PlayTournament
+
+Purpose: Runs a series of games and maintains score until user serializes or quits
+
+Parameters: none
+
+Return Value: none
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Runs a Tournament
 void Tournament::PlayTournament() {
 	// Ask user if they want to restore the tournament from existing file
@@ -70,6 +90,19 @@ void Tournament::PlayTournament() {
 	return;
 }
 
+/* *********************************************************************
+Function Name: SerializeGame
+
+Purpose: Processes the serialization request from the human player
+
+Parameters: game, the current game object
+
+Return Value: none
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Serializes a Tournament state
 void Tournament::SerializeGame(Game &game) {
 	// Store the next player in a string
@@ -89,6 +122,19 @@ void Tournament::SerializeGame(Game &game) {
 	}
 }
 
+/* *********************************************************************
+Function Name: DecisionToContinue
+
+Purpose: To Ask user if they want to continue the tournament after a game is voer
+
+Parameters: none
+
+Return Value: none
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
 // Gets user's choice on whether to continue to another round
 void Tournament::DecisionToContinue() {
 	temp = ' ';
