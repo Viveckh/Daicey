@@ -147,7 +147,28 @@ bool Computer::Play(Board &board, bool helpModeOn) {
 		}
 	}
 
-	// STEP 4: Go through the remaining possibilities and move a die with intentions of getting it closer to the king or key square.
+	// STEP 4: Protect any own dice that might be potentially captured by the opponent in the next step
+	notifications.BotsThink_ProtectDicesFromPotentialCaptures();
+	// for all uncaptured opponent dices
+	for (index = 0; index < TEAMSIZE; index++) {
+		if (!opponentDiceList[index].IsCaptured()) {
+			// go through all of own uncaptured dices and check chances of hostile takeover
+			for (int counter = 0; counter < TEAMSIZE; counter++) {
+				if (!ownDiceList[counter].IsCaptured()) {
+					if (IsValidDestination(opponentDiceList[index], calculationBoard.GetSquareAtLocation(ownDiceList[counter].GetRow(), ownDiceList[counter].GetColumn()))) {
+						if (IsPathValid(opponentDiceList[index], calculationBoard.GetSquareAtLocation(ownDiceList[counter].GetRow(), ownDiceList[counter].GetColumn()), calculationBoard)) {
+							if (ProtectTheDice(calculationBoard.GetSquareAtLocation(ownDiceList[counter].GetRow(), ownDiceList[counter].GetColumn()), board)) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	// STEP 5: Go through the remaining possibilities and move a die with intentions of getting it closer to the king or key square.
 
 	// Variables to store the best combination of origin and destination co-ordinates for a move, and also the minDistance that has been attained.
 	tuple<int, int, int, int> moveCoordinates = make_tuple(0, 0, 0, 0);
@@ -410,6 +431,40 @@ bool Computer::TryMovingKing(Square kingSquare, Board &board) {
 			if (!IsInDanger(board.GetSquareAtLocation(kingSquare.GetRow(), kingSquare.GetColumn() - 1), board)) {
 				if (MakeAMove(kingSquare.GetRow(), kingSquare.GetColumn(), kingSquare.GetRow(), kingSquare.GetColumn() - 1, board, helpModeOn, 0)) {
 					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+/* *********************************************************************
+Function Name: ProtectTheDice
+
+Purpose: To move a dice under threat to a safe location
+
+Parameters:
+squareAtRisk, the square that needs to be moved to a safe location
+board, the game board in context (passed by ref)
+
+Return Value: true if move successful, false if unsuccessful
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
+// Tries protecting a dice under threat
+bool Computer::ProtectTheDice(Square squareAtRisk, Board &board) {
+	// Go through the entire game board, find a location where the squareAtRisk will be safe and move it there
+	for (int row = 0; row < 8; row++) {
+		for (int col = 0; col < 9; col++) {
+			if (IsValidDestination(*squareAtRisk.GetResident(), board.GetSquareAtLocation(row, col))) {
+				if (IsPathValid(*squareAtRisk.GetResident(), board.GetSquareAtLocation(row, col), board)) {
+					if (!IsInDanger(board.GetSquareAtLocation(row, col), board)) {
+						if (MakeAMove(squareAtRisk.GetRow(), squareAtRisk.GetColumn(), row, col, board, helpModeOn, 0)) {
+							return true;
+						}
+					}
 				}
 			}
 		}

@@ -50,6 +50,9 @@ private:
 
 	// Tries moving the king to a secure position
 	bool TryMovingKing(Square kingSquare, Board &board);
+	
+	// Try protecting a dice under threat
+	bool ProtectTheDice(Square squareAtRisk, Board &board);
 
 	// Checks if a given square is at risk from opponent dices
 	bool IsInDanger(Square squareAtRisk, Board board);

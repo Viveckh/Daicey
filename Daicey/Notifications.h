@@ -134,7 +134,7 @@ public:
 
 	// Prompt to ask user if they want to play again
 	inline void Msg_WantToPlayAgain() {
-		cout << endl << "MSG:\t\t Do you want to play another round? (y or n)? ";
+		cout << endl << "MSG:\t Do you want to play another round? (y or n)? ";
 	}
 
 	// Draws a divider line
@@ -230,6 +230,11 @@ public:
 	// Captured opponent msg
 	inline void BotsThink_CapturedOpponentDice() {
 		cout << "Bots Mumbling:\t We captured an opponent die." << endl;
+	}
+
+	// Checking to see if any of own dice are threatened by opponent dices
+	inline void BotsThink_ProtectDicesFromPotentialCaptures() {
+		cout << "Bots Mumbling:\t Checking if any of the own dices are under threat of being captured by opponent..." << endl;
 	}
 
 	// searching an ordinary move msg
