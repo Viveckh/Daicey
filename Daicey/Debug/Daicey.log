@@ -1,10 +1,16 @@
-﻿  Computer.cpp
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  Tournament.cpp
+﻿  Tournament.cpp
+  stdafx.cpp
+  Square.cpp
+  Serializer.cpp
   Player.cpp
   Main.cpp
   Human.cpp
   Game.cpp
+c:\users\zcv0lhb\documents\visual studio 2015\opl\daicy_c++\daicey\daicey\game.cpp(285): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Dice.cpp
+  Computer.cpp
+  BoardView.cpp
+  Board.cpp
+  Generating Code...
   Daicey.vcxproj -> C:\Users\zcv0lhb\Documents\Visual Studio 2015\OPL\Daicy_C++\Daicey\Daicey\Debug\Daicey.exe
   Daicey.vcxproj -> C:\Users\zcv0lhb\Documents\Visual Studio 2015\OPL\Daicy_C++\Daicey\Daicey\Debug\Daicey.pdb (Partial PDB)
