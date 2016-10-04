@@ -17,16 +17,22 @@ class Computer : public Player {
 public:
 
 	// Default Constructor
-	Computer() {}
+	Computer();
 
 	// Prioritizes, Calculates and makes the proper move for Computer on its turn
-	bool Play(Board &board);
+	bool Play(Board &board, bool helpModeOn);
 
 private:
 
 	// CONSTANTS, VARIABLES AND OBJECT DECLARATIONS
 	const int TEAMSIZE = 9;
+	bool helpModeOn;
 	Notifications notifications;
+
+	Dice ownDiceList[9];
+	Dice opponentDiceList[9];
+	Square ownKingSquare, ownKeySquare;
+	Square opponentKingSquare, opponentKeySquare;
 
 	// UTILITY FUNCTIONS
 

@@ -45,7 +45,7 @@ bool Human::Play(int startRow, int startCol, int endRow, int endCol, Board &boar
 	if (board.GetSquareResident(startRow, startCol) != NULL) {
 		if (!board.GetSquareResident(startRow, startCol)->IsBotOperated()) {
 			// Checking to see if there is a 90 degree turn			
-			if (MakeAMove(startRow, startCol, endRow, endCol, board, path)) {
+			if (MakeAMove(startRow, startCol, endRow, endCol, board, false, path)) {
 				return true;
 			}
 			else {

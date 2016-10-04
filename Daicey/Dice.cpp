@@ -9,6 +9,7 @@
 
 // Default Constructor
 Dice::Dice() {
+	SUM_OF_OPPOSITE_SIDES = 7;
 	row = 0;
 	column = 0;
 	top = 1;

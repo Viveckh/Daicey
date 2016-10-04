@@ -58,10 +58,10 @@ char Game::ImplementGame(bool restoringGame, string nextPlayer) {
 
 	// Continue the loop until one of the king is captured, one of the key squares gets occupied or user chooses to serialize and quit
 	do {
-		// If it is Computer's turn
+		// If it is Computer's turn	
 		if (botTurn) {
 			notifications.Msg_Turns("COMPUTER'S TURN");
-			if (bot.Play(board)) {
+			if (bot.Play(board, false)) {
 				//Transfer Control
 				botTurn = false;
 				humanTurn = true;
@@ -76,6 +76,11 @@ char Game::ImplementGame(bool restoringGame, string nextPlayer) {
 		// If it is human's turn
 		if (humanTurn) {
 			notifications.Msg_Turns("YOUR TURN");
+			if (TurnHelpModeOn()) {
+				notifications.Msg_HelpModeOn();
+				// Calling Bot Play in Help Mode
+				bot.Play(board, true);
+			}
 			GetUserInput();
 			if (human.Play(startRow, startCol, endRow, endCol, board, path)) {
 				humanTurn = false;
@@ -115,6 +120,35 @@ char Game::ImplementGame(bool restoringGame, string nextPlayer) {
 }
 
 /* *********************************************************************
+Function Name: TurnHelpModeOn
+
+Purpose: Ask human player if they want to turn help mode on
+
+Parameters: none
+
+Return Value: true if user requests help mode, false otherwise
+
+Local Variables: none
+
+Assistance Received: none
+********************************************************************* */
+// Receives user input on whether they want to turn on help mode
+bool Game::TurnHelpModeOn() {
+	notifications.Msg_HelpModePrompt();
+	string input;
+	while (!(cin >> input)) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		notifications.Msg_ImproperInput();
+	}
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	if (input == "help") {
+		return true;
+	}
+	return false;
+}
+
+/* *********************************************************************
 Function Name: UserWantsToSerialize
 
 Purpose: Ask human player if they want to serialize
@@ -130,7 +164,6 @@ Assistance Received: none
 // Asks if user wants to serialize & returns true if user wants to serialize
 bool Game::UserWantsToSerialize() {
 	notifications.Msg_SerializePrompt();
-	//cin >> wishToSerialize;
 	while (!(cin >> wishToSerialize)) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');

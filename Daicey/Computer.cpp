@@ -7,6 +7,11 @@
 
 #include "Computer.h"
 
+// Default Constructor
+Computer::Computer() {
+	helpModeOn = false;
+}
+
 /* *********************************************************************
 Function Name: Play
 
@@ -18,10 +23,10 @@ Return Value: true if a move is made successfully, false if no move made
 
 Local Variables: 
 calculationBoard, a copy of current board to use for move calculation purposes
-humanKingSquare, a copy of human's king square
-humanKeySquare, a copy of human's key square
-botKingSquare, a copy of bot's king square
-botKeySquare, a copy of bot's key square
+ownKingSquare, a copy of the king square of the calling team
+ownKeySquare, a copy of the key square of the calling team
+opponentKingSquare, a copy of king square of passive team
+opponentKeySquare, a copy of key square of passive team
 index & jindex, counter for loops
 moveCoordinates, tuple to store start and end coordinates of the best move calculated so far
 minDistance, integer to store the minimum distance of a move so far
@@ -30,27 +35,46 @@ distanceFromFinalDestination,  integer to store the distance from key pieces in 
 Assistance Received: none
 ********************************************************************* */
 // Prioritizes, Calculates and makes the proper move for Computer on its turn
-bool Computer::Play(Board &board) {
+bool Computer::Play(Board &board, bool helpModeOn) {
+	this->helpModeOn = helpModeOn;
 	printNotifications = false;
+	
+	// Using implicitly defined copy constructor
+	Board calculationBoard(board);
+	
+	// If help mode on, the algorithm will work favorably for human and against the computer
+	if (helpModeOn) {
+		// Setting Human as the owner and bot as the opponent
+		copy(calculationBoard.humans, calculationBoard.humans + TEAMSIZE, ownDiceList);
+		copy(calculationBoard.bots, calculationBoard.bots + TEAMSIZE, opponentDiceList);
+		ownKingSquare = calculationBoard.GetSquareAtLocation(calculationBoard.GetHumanKing().GetRow(), calculationBoard.GetHumanKing().GetColumn());
+		ownKeySquare = calculationBoard.GetSquareAtLocation(0, 4);
+		opponentKingSquare = calculationBoard.GetSquareAtLocation(calculationBoard.GetBotKing().GetRow(), calculationBoard.GetBotKing().GetColumn());
+		opponentKeySquare = calculationBoard.GetSquareAtLocation(7, 4);
+	}
+	else {
+		// Setting Bot as the owner and human as the opponent
+		copy(calculationBoard.bots, calculationBoard.bots + TEAMSIZE, ownDiceList);
+		copy(calculationBoard.humans, calculationBoard.humans + TEAMSIZE, opponentDiceList);
+		ownKingSquare = calculationBoard.GetSquareAtLocation(calculationBoard.GetBotKing().GetRow(), calculationBoard.GetBotKing().GetColumn());
+		ownKeySquare = calculationBoard.GetSquareAtLocation(7, 4);
+		opponentKingSquare = calculationBoard.GetSquareAtLocation(calculationBoard.GetHumanKing().GetRow(), calculationBoard.GetHumanKing().GetColumn());
+		opponentKeySquare = calculationBoard.GetSquareAtLocation(0, 4);
+	}
 
-	Board calculationBoard(board);	// Using implicitly defined copy constructor
-	Square humanKingSquare = calculationBoard.GetSquareAtLocation(calculationBoard.GetHumanKing().GetRow(), calculationBoard.GetHumanKing().GetColumn());
-	Square humanKeySquare = calculationBoard.GetSquareAtLocation(0, 4);
-	Square botKingSquare = calculationBoard.GetSquareAtLocation(calculationBoard.GetBotKing().GetRow(), calculationBoard.GetBotKing().GetColumn());
-	Square botKeySquare = calculationBoard.GetSquareAtLocation(7, 4);
 	int index;
-
+	
 	notifications.BotsThink_TryingToCaptureOpponentKeys();
 	// STEP 1: Check if the opponent's king or key square can be captured. If yes, go for it!
 	for (index = 0; index < TEAMSIZE; index++) {
-		if (!calculationBoard.bots[index].IsCaptured()) {
+		if (!ownDiceList[index].IsCaptured()) {
 			// Try to capture the king die
-			if (MakeAMove(calculationBoard.bots[index].GetRow(), calculationBoard.bots[index].GetColumn(), humanKingSquare.GetRow(), humanKingSquare.GetColumn(), board, 0)) {
+			if (MakeAMove(ownDiceList[index].GetRow(), ownDiceList[index].GetColumn(), opponentKingSquare.GetRow(), opponentKingSquare.GetColumn(), board, helpModeOn, 0)) {
 				return true;
 			}
 			// Try to capture the key square by the king die
-			if (calculationBoard.bots[index].IsKing()) {
-				if (MakeAMove(calculationBoard.bots[index].GetRow(), calculationBoard.bots[index].GetColumn(), humanKeySquare.GetRow(), humanKeySquare.GetColumn(), board, 0)) {
+			if (ownDiceList[index].IsKing()) {
+				if (MakeAMove(ownDiceList[index].GetRow(), ownDiceList[index].GetColumn(), opponentKeySquare.GetRow(), opponentKeySquare.GetColumn(), board, helpModeOn, 0)) {
 					return true;
 				}
 			}
@@ -60,18 +84,18 @@ bool Computer::Play(Board &board) {
 	notifications.BotsThink_CheckingKingNKeySquareSafety();
 	// STEP 2: Check if own king or keysquare is under potential attack. If yes, Save Em'
 	for (index = 0; index < TEAMSIZE; index++) {
-		if (!calculationBoard.humans[index].IsCaptured()) {
+		if (!opponentDiceList[index].IsCaptured()) {
 			// ATTENTION: If both kingSquare and KeySquare are under threat, then blocking is the best way to go about it
 
 			//Check if KingSquare is under imminent threat
-			if (IsValidDestination(calculationBoard.humans[index], botKingSquare)) {
-				if (IsPathValid(calculationBoard.humans[index], botKingSquare, calculationBoard)) {
+			if (IsValidDestination(opponentDiceList[index], ownKingSquare)) {
+				if (IsPathValid(opponentDiceList[index], ownKingSquare, calculationBoard)) {
 					// King is under imminent threat
 					notifications.BotsThink_KeyThreatDetected("King");
 
 					// First, Try capturing the hostile opponent
-					if (TryCapturingTheHostileOpponent(calculationBoard.humans[index], board)) {
-						notifications.BotsThink_HostileOpponentCaptured("King");
+					if (TryCapturingTheHostileOpponent(opponentDiceList[index], board)) {
+						helpModeOn ? notifications.Msg_NoMsg() : notifications.BotsThink_HostileOpponentCaptured("King");
 						return true;
 					}
 					else {
@@ -79,8 +103,8 @@ bool Computer::Play(Board &board) {
 					}
 
 					// Second, Try blocking the hostile opponent
-					if (TryBlockingAttack(calculationBoard.humans[index], botKingSquare, board)) {
-						notifications.BotsThink_BlockingMoveMade();
+					if (TryBlockingAttack(opponentDiceList[index], ownKingSquare, board)) {
+						helpModeOn ? notifications.Msg_NoMsg() : notifications.BotsThink_BlockingMoveMade();
 						return true;
 					}
 					else {
@@ -89,8 +113,8 @@ bool Computer::Play(Board &board) {
 
 
 					// Third, Try moving the king as a last resort and make sure the new position is safe
-					if (TryMovingKing(botKingSquare, board)) {
-						notifications.BotsThink_KingMoved();
+					if (TryMovingKing(ownKingSquare, board)) {
+						helpModeOn ? notifications.Msg_NoMsg() : notifications.BotsThink_KingMoved();
 						return true;
 					}
 					else {
@@ -99,45 +123,23 @@ bool Computer::Play(Board &board) {
 				}
 			}
 
-			// Check if KeySquare is under imminent threat by opponent's king dice
-			if (calculationBoard.humans[index].IsKing()) {
-				// This might actually not be helpful at all since everything that is being done here to stop opponent king has already been attempted above.
-				if (IsValidDestination(calculationBoard.humans[index], botKeySquare)) {
-					if (IsPathValid(calculationBoard.humans[index], botKeySquare, calculationBoard)) {
-						notifications.BotsThink_KeyThreatDetected("KeySquare");
-						// First, Try capturing the hostile opponent (though capturing the opponent king has already been attempted above)
-						if (TryCapturingTheHostileOpponent(calculationBoard.humans[index], board)) {
-							notifications.BotsThink_HostileOpponentCaptured("KeySquare");
-							return true;
-						}
-						else {
-							notifications.BotsThink_HostileOpponentUncapturable("KeySquare");
-						}
+			// SAFETY OF THE KEY SQUARE HAS BEEN TAKEN CARE IN ABOVE STEPS ALREADY
+			// Opponent king is the only threat to the key square
+			// And capture of opponent king has already been tried above and Blocking the hostile king can't really be done since it will be right next to the keysquare if a threat)
 
-						// Second, Try blocking the hostile opponent (this can't really be done since the opponent will be right next to the square.)
-						if (TryBlockingAttack(calculationBoard.humans[index], botKeySquare, board)) {
-							notifications.BotsThink_BlockingMoveMade();
-							return true;
-						}
-						else {
-							notifications.BotsThink_BlockingMoveNotPossible();
-						}
-					}
-				}
-			}
 		}
 	}
 
-	// STEP 3: Try capturing the opponent's other dices if kings are in safe place
+	// STEP 3: Try to capture any vulnerable opponent dice in the game board
 	// We will not send king to capture opponents to make sure king is safe from opponent's trap, king will only capture opponent king which is facilitated above
 	notifications.BotsThink_TryingToCaptureOpponentDice();
 	for (index = 0; index < TEAMSIZE; index++) {
 		// Use the die to hunt only if it is not a king and hasn't been captured yet
-		if (!calculationBoard.bots[index].IsKing() && !calculationBoard.bots[index].IsCaptured()) {
+		if (!ownDiceList[index].IsKing() && !ownDiceList[index].IsCaptured()) {
 			for (int jindex = 0; jindex < TEAMSIZE; jindex++) {
-				if (!calculationBoard.humans[jindex].IsCaptured()) {
-					if (MakeAMove(calculationBoard.bots[index].GetRow(), calculationBoard.bots[index].GetColumn(), calculationBoard.humans[jindex].GetRow(), calculationBoard.humans[jindex].GetColumn(), board, 0)) {
-						notifications.BotsThink_CapturedOpponentDice();
+				if (!opponentDiceList[jindex].IsCaptured()) {
+					if (MakeAMove(ownDiceList[index].GetRow(), ownDiceList[index].GetColumn(), opponentDiceList[jindex].GetRow(), opponentDiceList[jindex].GetColumn(), board, helpModeOn, 0)) {
+						helpModeOn ? notifications.Msg_NoMsg() : notifications.BotsThink_CapturedOpponentDice();
 						return true;
 					}
 				}
@@ -155,24 +157,24 @@ bool Computer::Play(Board &board) {
 	notifications.BotsThink_SearchingOrdinaryMove();
 	//For each of the die, go through every square in the gameboard and find the most optimal square to move in current state
 	for (index = 0; index < TEAMSIZE; index++) {
-		if (!calculationBoard.bots[index].IsKing() && !calculationBoard.bots[index].IsCaptured()) {						// For every uncaptured soldier die
+		if (!ownDiceList[index].IsKing() && !ownDiceList[index].IsCaptured()) {						// For every uncaptured soldier die
 			for (int row = 0; row < 8; row++) {																			// Go through the entire board and
 				for (int col = 0; col < 9; col++) {
-					if (IsValidDestination(calculationBoard.bots[index], calculationBoard.GetSquareAtLocation(row, col))) {			// Check if valid dest
-						if (IsPathValid(calculationBoard.bots[index], calculationBoard.GetSquareAtLocation(row, col), board)) {		// Check if valid path
+					if (IsValidDestination(ownDiceList[index], calculationBoard.GetSquareAtLocation(row, col))) {			// Check if valid dest
+						if (IsPathValid(ownDiceList[index], calculationBoard.GetSquareAtLocation(row, col), board)) {		// Check if valid path
 							if (!IsInDanger(board.GetSquareAtLocation(row, col), board)) {											// Check if safe
 																																	// Compare distance to get to the king square from new location
-								distanceFromFinalDestination = abs(humanKingSquare.GetRow() - row) + abs(humanKingSquare.GetColumn() - col);
+								distanceFromFinalDestination = abs(opponentKingSquare.GetRow() - row) + abs(opponentKingSquare.GetColumn() - col);
 								if (distanceFromFinalDestination < minDistance) {													// Check if distance to key becomes minimum & then assign
 									minDistance = distanceFromFinalDestination;
-									moveCoordinates = make_tuple(calculationBoard.bots[index].GetRow(), calculationBoard.bots[index].GetColumn(), row, col);	// In order: startRow, startCol, endRow, endCol
+									moveCoordinates = make_tuple(ownDiceList[index].GetRow(), ownDiceList[index].GetColumn(), row, col);	// In order: startRow, startCol, endRow, endCol
 								}
 
 								//Compare distance to get to the key square from new location
-								distanceFromFinalDestination = abs(humanKeySquare.GetRow() - row) + abs(humanKeySquare.GetColumn() - col);
+								distanceFromFinalDestination = abs(opponentKeySquare.GetRow() - row) + abs(opponentKeySquare.GetColumn() - col);
 								if (distanceFromFinalDestination < minDistance) {													// Check if distance to key becomes minimum & then assign
 									minDistance = distanceFromFinalDestination;
-									moveCoordinates = make_tuple(calculationBoard.bots[index].GetRow(), calculationBoard.bots[index].GetColumn(), row, col);	// In order: startRow, startCol, endRow, endCol
+									moveCoordinates = make_tuple(ownDiceList[index].GetRow(), ownDiceList[index].GetColumn(), row, col);	// In order: startRow, startCol, endRow, endCol
 								}
 							}
 						}
@@ -185,7 +187,7 @@ bool Computer::Play(Board &board) {
 
 	// If a better path was found from the above intensive checking
 	if (minDistance < 99) {
-		if (MakeAMove(get<0>(moveCoordinates), get<1>(moveCoordinates), get<2>(moveCoordinates), get<3>(moveCoordinates), board, 0)) {
+		if (MakeAMove(get<0>(moveCoordinates), get<1>(moveCoordinates), get<2>(moveCoordinates), get<3>(moveCoordinates), board, helpModeOn, 0)) {
 			return true;
 		}
 	}
@@ -273,8 +275,8 @@ bool Computer::FindBlockPointVertically(Dice &hostileDice, Square &squareToProte
 
 		// See if any of the own dies can take that spot and block
 		for (int i = 0; i < TEAMSIZE; i++) {
-			if (!board.bots[i].IsKing() && !board.bots[i].IsCaptured()) {
-				if (MakeAMove(board.bots[i].GetRow(), board.bots[i].GetColumn(), hostileDice.GetRow(), hostileDice.GetColumn(), board, 0)) {
+			if (!ownDiceList[i].IsKing() && !ownDiceList[i].IsCaptured()) {
+				if (MakeAMove(ownDiceList[i].GetRow(), ownDiceList[i].GetColumn(), hostileDice.GetRow(), hostileDice.GetColumn(), board, helpModeOn, 0)) {
 					return true;
 				}
 			}
@@ -314,8 +316,8 @@ bool Computer::FindBlockPointLaterally(Dice &hostileDice, Square &squareToProtec
 
 		// See if any of the own dies can take that spot and block
 		for (int i = 0; i < TEAMSIZE; i++) {
-			if (!board.bots[i].IsKing() && !board.bots[i].IsCaptured()) {
-				if (MakeAMove(board.bots[i].GetRow(), board.bots[i].GetColumn(), hostileDice.GetRow(), hostileDice.GetColumn(), board, 0)) {
+			if (!ownDiceList[i].IsKing() && !ownDiceList[i].IsCaptured()) {
+				if (MakeAMove(ownDiceList[i].GetRow(), ownDiceList[i].GetColumn(), hostileDice.GetRow(), hostileDice.GetColumn(), board, helpModeOn, 0)) {
 					return true;
 				}
 			}
@@ -342,9 +344,9 @@ Assistance Received: none
 // Tries capturing a hostile opponent who is a potential threat
 bool Computer::TryCapturingTheHostileOpponent(Dice hostileDice, Board &board) {
 	for (int i = 0; i < TEAMSIZE; i++) {
-		if (!board.bots[i].IsCaptured()) {
+		if (!ownDiceList[i].IsCaptured()) {
 			// Try to capture the king die
-			if (MakeAMove(board.bots[i].GetRow(), board.bots[i].GetColumn(), hostileDice.GetRow(), hostileDice.GetColumn(), board, 0)) {
+			if (MakeAMove(ownDiceList[i].GetRow(), ownDiceList[i].GetColumn(), hostileDice.GetRow(), hostileDice.GetColumn(), board, helpModeOn, 0)) {
 				return true;
 			}
 		}
@@ -373,7 +375,7 @@ bool Computer::TryMovingKing(Square kingSquare, Board &board) {
 	if (kingSquare.GetRow() < 7) {
 		if (IsValidDestination(*kingSquare.GetResident(), board.GetSquareAtLocation(kingSquare.GetRow() + 1, kingSquare.GetColumn()))) {
 			if (!IsInDanger(board.GetSquareAtLocation(kingSquare.GetRow() + 1, kingSquare.GetColumn()), board)) {
-				if (MakeAMove(kingSquare.GetRow(), kingSquare.GetColumn(), kingSquare.GetRow() + 1, kingSquare.GetColumn(), board, 0)) {
+				if (MakeAMove(kingSquare.GetRow(), kingSquare.GetColumn(), kingSquare.GetRow() + 1, kingSquare.GetColumn(), board, helpModeOn, 0)) {
 					return true;
 				}
 			}
@@ -384,7 +386,7 @@ bool Computer::TryMovingKing(Square kingSquare, Board &board) {
 	if (kingSquare.GetRow() > 0) {
 		if (IsValidDestination(*kingSquare.GetResident(), board.GetSquareAtLocation(kingSquare.GetRow() - 1, kingSquare.GetColumn()))) {
 			if (!IsInDanger(board.GetSquareAtLocation(kingSquare.GetRow() - 1, kingSquare.GetColumn()), board)) {
-				if (MakeAMove(kingSquare.GetRow(), kingSquare.GetColumn(), kingSquare.GetRow() - 1, kingSquare.GetColumn(), board, 0)) {
+				if (MakeAMove(kingSquare.GetRow(), kingSquare.GetColumn(), kingSquare.GetRow() - 1, kingSquare.GetColumn(), board, helpModeOn, 0)) {
 					return true;
 				}
 			}
@@ -395,7 +397,7 @@ bool Computer::TryMovingKing(Square kingSquare, Board &board) {
 	if (kingSquare.GetColumn() < 8) {
 		if (IsValidDestination(*kingSquare.GetResident(), board.GetSquareAtLocation(kingSquare.GetRow(), kingSquare.GetColumn() + 1))) {
 			if (!IsInDanger(board.GetSquareAtLocation(kingSquare.GetRow(), kingSquare.GetColumn() + 1), board)) {
-				if (MakeAMove(kingSquare.GetRow(), kingSquare.GetColumn(), kingSquare.GetRow(), kingSquare.GetColumn() + 1, board, 0)) {
+				if (MakeAMove(kingSquare.GetRow(), kingSquare.GetColumn(), kingSquare.GetRow(), kingSquare.GetColumn() + 1, board, helpModeOn, 0)) {
 					return true;
 				}
 			}
@@ -406,7 +408,7 @@ bool Computer::TryMovingKing(Square kingSquare, Board &board) {
 	if (kingSquare.GetColumn() > 0) {
 		if (IsValidDestination(*kingSquare.GetResident(), board.GetSquareAtLocation(kingSquare.GetRow(), kingSquare.GetColumn() - 1))) {
 			if (!IsInDanger(board.GetSquareAtLocation(kingSquare.GetRow(), kingSquare.GetColumn() - 1), board)) {
-				if (MakeAMove(kingSquare.GetRow(), kingSquare.GetColumn(), kingSquare.GetRow(), kingSquare.GetColumn() - 1, board, 0)) {
+				if (MakeAMove(kingSquare.GetRow(), kingSquare.GetColumn(), kingSquare.GetRow(), kingSquare.GetColumn() - 1, board, helpModeOn, 0)) {
 					return true;
 				}
 			}
@@ -434,9 +436,9 @@ Assistance Received: none
 bool Computer::IsInDanger(Square squareAtRisk, Board board) {
 	for (int index = 0; index < TEAMSIZE; index++) {
 		// This even considers threat from the king and just not normal soldier attacks
-		if (!board.humans[index].IsCaptured()) {
-			if (IsValidDestination(board.humans[index], squareAtRisk)) {
-				if (IsPathValid(board.humans[index], squareAtRisk, board)) {
+		if (!opponentDiceList[index].IsCaptured()) {
+			if (IsValidDestination(opponentDiceList[index], squareAtRisk)) {
+				if (IsPathValid(opponentDiceList[index], squareAtRisk, board)) {
 					return true;
 				}
 			}

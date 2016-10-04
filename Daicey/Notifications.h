@@ -152,6 +152,11 @@ public:
 		cout << "Type 'serialize' to serialize, anything else to continue :- ";
 	}
 
+	// Prompt to ask user if they want help mode on
+	inline void Msg_HelpModePrompt() {
+		cout << "Type 'help' to turn help mode ON, anything else to continue :- ";
+	}
+
 	// Serialization failed and exit
 	inline void Msg_SerializednExited(string status) {
 		cout << "Serialization " <<  status << " . The game will exit now." << endl;
@@ -177,6 +182,7 @@ public:
 		cout << "Bots Mumbling:\t Trying to capture opponent's King or KeySquare..." << endl;
 	}
 
+	// Msg notifying that the safety of key pieces/squares are being taken care of
 	inline void BotsThink_CheckingKingNKeySquareSafety() {
 		cout << "Bots Mumbling:\t Monitoring territory to ensure the King & KeySquare are safe..." << endl;
 	}
@@ -229,6 +235,33 @@ public:
 	// searching an ordinary move msg
 	inline void BotsThink_SearchingOrdinaryMove() {
 		cout << "Bots Mumbling:\t Examining possible moves to get closer to the opponent king/keysquare..." << endl;
+	}
+
+	// Help mode on msg
+	inline void Msg_HelpModeOn() {
+		cout << endl << "HELP MODE ACTIVATED!" << endl;
+	}
+
+	// Prints the move recommended by the computer
+	inline void Msg_HelpModeRecommendedMove(int startRow, int startCol, int endRow, int endCol, int pathChoice) {
+		cout << endl << "RECOMMENDED:\t Move the dice in square (" << startRow << ", " << startCol << ") to (" << endRow << ", " << endCol << ") using a ";
+		switch (pathChoice) {
+		case 1:
+			cout << "Vertical then Lateral Path" << endl;
+			break;
+		case 2:
+			cout << "Lateral then Vertical Path" << endl;
+			break;
+		case 3:
+			cout << "Vertical Path" << endl;
+			break;
+		case 4:
+			cout << "Lateral Path" << endl;
+			break;
+		default:
+			break;
+		}
+		cout << endl << "HELP MODE DEACTIVATED!" << endl;
 	}
 
 	private:

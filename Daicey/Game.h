@@ -66,6 +66,9 @@ private:
 
 	// UTILITY FUNCTIONS
 
+	// Receives user input on whether they want to turn on help mode
+	bool TurnHelpModeOn();
+
 	// Asks if user wants to serialize & returns true if user wants to serialize
 	bool UserWantsToSerialize();
 

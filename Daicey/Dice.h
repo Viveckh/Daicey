@@ -100,7 +100,7 @@ public:
 
 private:
 	//CONSTANTS & VARIABLES DECLARATIONS
-	const int SUM_OF_OPPOSITE_SIDES = 7;
+	int SUM_OF_OPPOSITE_SIDES;
 
 	// Variables to dice location & properties
 	int row;

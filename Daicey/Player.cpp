@@ -448,13 +448,19 @@ rightValueAtStart, the right value of the dice at starting coordinate
 Assistance Received: none
 ********************************************************************* */
 // Checks the validity of a given move, and performs it on the gameboard if valid
-bool Player::MakeAMove(int startRow, int startCol, int endRow, int endCol, Board &board, int path) {
+bool Player::MakeAMove(int startRow, int startCol, int endRow, int endCol, Board &board, bool helpModeOn, int path) {
 	//Check if destination is valid, then if path is valid
 	//Then, either make the move or log an error
 	// This can be used for both human or computer after verifying that they are moving their own players.
 	// Path 1 and 2 need to offset the changes done by the first function, and hence the startRow/startCol has a counter added in the second function
 	if (IsValidDestination(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol))) {
 		if (IsPathValid(*board.GetSquareResident(startRow, startCol), board.GetSquareAtLocation(endRow, endCol), board)) {
+			// If help mode is on, no need to make the actual move, return true here and print suggestion
+			if (helpModeOn) {
+				notifications.Msg_HelpModeRecommendedMove(startRow + 1, startCol + 1, endRow + 1, endCol + 1, pathChoice);
+				return true;
+			}
+			
 			int topValueAtStart = board.GetSquareResident(startRow, startCol)->GetTop();
 			int rightValueAtStart = board.GetSquareResident(startRow, startCol)->GetRight();
 

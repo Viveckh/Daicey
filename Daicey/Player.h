@@ -65,7 +65,7 @@ protected:
 	*/
 
 	// Checks the validity of a given move, and performs it on the gameboard if valid
-	bool MakeAMove(int startRow, int startCol, int endRow, int endCol, Board &board, int path = 0);
+	bool MakeAMove(int startRow, int startCol, int endRow, int endCol, Board &board, bool helpModeOn, int path = 0);
 
 	//These two following functions will modify the actual gameboard. So pass the real game objects
 	// Make sure you check the validity of the path beforehand. Cause they won't do the checking
